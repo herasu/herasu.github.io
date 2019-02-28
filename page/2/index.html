@@ -311,258 +311,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/CSS伪元素总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="herasu">
-      <meta itemprop="description" content="Be kind">
-      <meta itemprop="image" content="/images/night.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fish">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/01/CSS伪元素总结/" itemprop="url">
-                  CSS伪元素整理小结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-08-01 16:59:19 / 修改时间：16:59:01" itemprop="dateCreated datePublished" datetime="2018-08-01T16:59:19+08:00">2018-08-01</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="CSS伪元素整理小结"><a href="#CSS伪元素整理小结" class="headerlink" title="CSS伪元素整理小结"></a>CSS伪元素整理小结</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>CSS中有一个特性允许我们添加额外元素而不影响文档本身，即实际上文档中没有生成这些元素，但在表面上可见，这就是伪元素。伪元素是对元素中的特定内容进行操作。实际上，设计伪元素的目的就是选取某些内容第一个字母（一行）、前面（后面）或是占位符等普通的选择器无法完成的工作。它控制的内容实际上和元素是相同的，但是它本身只是基于元素的抽象，并不存在于文档中，所以称作伪元素。伪元素在CSS1中就已经存在，CSS2和3中也有所增加，目前[CSS-PSEUDO-4] (Level 4)中也有部分处于试验阶段，表格中已用“*”标记。</p>
-<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>起初伪元素的语法是使用一个冒号“:”，但是随着web的发展，在CSS3中伪元素使用两个冒号“::”，以便将它与伪类区分开（如:hover，:active等）。然而，使用一个冒号还是两个冒号，浏览器都能识别它们。但是IE8只支持一个冒号的格式，建议使用两个冒号::与伪类区分。</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><ul>
-<li>基本用法</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selector::pseudo-element &#123;property:value;&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>结合CSS类</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selector.class::pseudo-element &#123;property:value;&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>结合CSS伪类</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selector.class:pseudo-class::pseudo-element &#123;property:value;&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>结合多个伪元素</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">selector::pseudo-element-1 </span><br><span class="line">selector::pseudo-element-2</span><br></pre></td></tr></table></figure>
-<ul>
-<li>多重伪元素与伪元素嵌套目前正逐步进行。</li>
-</ul>
-<h2 id="整理"><a href="#整理" class="headerlink" title="整理"></a>整理</h2><table>
-<thead>
-<tr>
-<th>伪元素</th>
-<th>功能</th>
-<th>分类</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>::first-letter</td>
-<td>向文本的第一个字母添加特殊样式</td>
-<td>Typographic</td>
-</tr>
-<tr>
-<td>::first-line</td>
-<td>向文本的首行添加特殊样式</td>
-<td>Typographic</td>
-</tr>
-<tr>
-<td>::before</td>
-<td>在元素之前添加内容</td>
-<td>Tree-Abiding</td>
-</tr>
-<tr>
-<td>::after</td>
-<td>在元素之后添加内容</td>
-<td>Tree-Abiding</td>
-</tr>
-<tr>
-<td>::placeholder*</td>
-<td>选择一个表单元素的占位文本，它允许开发者和设计师自定义占位文本的样式。</td>
-<td>Tree-Abiding</td>
-</tr>
-<tr>
-<td>::marker*</td>
-<td>选择列表的前置标记，一般包含着重符号或数字，任何设置 display: list-item属性的元素或伪元素都能适用</td>
-<td>Tree-Abiding</td>
-</tr>
-<tr>
-<td>::selection（::inactive-selection）</td>
-<td>设置对象被选择时的样式， 应用于文档中被用户高亮的部分（比如使用鼠标或其他选择设备选中的部分）</td>
-<td>Highlight</td>
-</tr>
-<tr>
-<td>::grammar-error*</td>
-<td>应用于浏览器标识为语法错误的文本段</td>
-<td>Highlight</td>
-</tr>
-<tr>
-<td>::spelling-erro*</td>
-<td>表示浏览器标记为不正确拼写的文本段</td>
-<td>Highlight</td>
-</tr>
-<tr>
-<td>::cue</td>
-<td>匹配所选元素中的WebVTT提示，可用于在VTT轨道的媒体中使用字幕和其他线索</td>
-<td>\</td>
-</tr>
-<tr>
-<td>::backdrop</td>
-<td>在任何处于全屏模式的元素下的即刻渲染的盒子</td>
-<td>\</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>尽管有这么多个伪元素（相比伪类已经不多了），但是常用的是前四个，并且后面部分浏览器支持度很差。最最常用的是 “::before” 和 “::after”。</p>
-<p>“::first-line” 与 “::first-letter”只能用于块级元素。</p>
-<p>当宿主元素没有内容时”::before” 与 “::after”仍会正常工作，为inline内联元素，可通过display：block设置为block块元素。</p>
-<p>content属性是伪元素必需的，若伪元素没有内容，需赋值为空格content:’’。</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>CSS 伪元素用于将特殊的效果添加到某些选择器。伪元素十分好用，可以在不影响实际HTML结构的情况下使用，将会为设计某些样式省下不少时间。</p>
-<p>参考：</p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference" target="_blank" rel="noopener">CSS reference</a></p>
-<p><a href="http://www.w3school.com.cn/css/css_pseudo_elements.asp" target="_blank" rel="noopener">W3school</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/30/ubuntu14.04误删管理员账户or忘记密码的解决方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1456,11 +1204,155 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/22/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="herasu">
+      <meta itemprop="description" content="Be kind">
+      <meta itemprop="image" content="/images/night.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fish">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/22/hello-world/" itemprop="url">
+                  Hello World
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-22 10:30:28" itemprop="dateCreated datePublished" datetime="2018-06-22T10:30:28+08:00">2018-06-22</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
   </nav>
 
 
@@ -1505,7 +1397,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
