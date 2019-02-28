@@ -112,13 +112,13 @@
 <meta name="keywords" content="vue数据,vue-cli兼容,vue打包,echarts">
 <meta property="og:type" content="article">
 <meta property="og:title" content="踩坑小结">
-<meta property="og:url" content="http://yoursite.com/2019/02/28/踩坑小小记录/index.html">
+<meta property="og:url" content="http://yoursite.com/2019/02/28/踩坑小结/index.html">
 <meta property="og:site_name" content="Fish">
 <meta property="og:description" content="最近实践开发中遇到一些小的问题，踩了不少坑，记录下来方便之后避免重复踩坑。 vue兼容IE Vue 不支持 IE8 及以下版本，因为 Vue 使用了 IE8 无法模拟的 ECMAScript 5 特性。但它支持所有兼容 ECMAScript 5 的浏览器。  no cli/webpack一开始没有使用vue-cli，只是单个的HTML文件，毕竟在Chrome下调试没有考虑到要兼容IE，对于非cli">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/720b6cbaly1g0m8eapcdej207207ldfn.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/720b6cbaly1g0m8ehfcy1j207f07pweb.jpg">
-<meta property="og:updated_time" content="2019-02-28T12:57:57.178Z">
+<meta property="og:updated_time" content="2019-02-28T13:04:40.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="踩坑小结">
 <meta name="twitter:description" content="最近实践开发中遇到一些小的问题，踩了不少坑，记录下来方便之后避免重复踩坑。 vue兼容IE Vue 不支持 IE8 及以下版本，因为 Vue 使用了 IE8 无法模拟的 ECMAScript 5 特性。但它支持所有兼容 ECMAScript 5 的浏览器。  no cli/webpack一开始没有使用vue-cli，只是单个的HTML文件，毕竟在Chrome下调试没有考虑到要兼容IE，对于非cli">
@@ -131,7 +131,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/02/28/踩坑小小记录/">
+  <link rel="canonical" href="http://yoursite.com/2019/02/28/踩坑小结/">
 
 
 
@@ -315,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/28/踩坑小小记录/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/28/踩坑小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="herasu">
@@ -357,7 +357,7 @@
                 
               
 
-              <time title="创建时间：2019-02-28 20:58:21 / 修改时间：20:57:57" itemprop="dateCreated datePublished" datetime="2019-02-28T20:58:21+08:00">2019-02-28</time>
+              <time title="创建时间：2019-02-28 21:04:48 / 修改时间：21:04:40" itemprop="dateCreated datePublished" datetime="2019-02-28T21:04:48+08:00">2019-02-28</time>
             
 
             
@@ -428,9 +428,7 @@
 <blockquote>
 <p>Babel默认只转换新的JavaScript句法（syntax），而不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。</p>
 </blockquote>
-<p>保险起见，使用browser.js（可转换不包含Promise等新的API的语法）与polyfill.js（确保API也能正常）。根据<a href="https://www.kancloud.cn/digest/babel/217110" target="_blank" rel="noopener">babel相关教程</a>进行修改，别忘记设置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=&quot;text/babel&quot;&gt;</span><br></pre></td></tr></table></figure>
-<p> 解决了部分问题，比如在IE下页面显示部分，但还是没有显示全。注意ES6是强制strict模式的，遇到报错</p>
+<p>保险起见，使用browser.js（可转换不包含Promise等新的API的语法）与polyfill.js（确保API也能正常）。根据<a href="https://www.kancloud.cn/digest/babel/217110" target="_blank" rel="noopener">babel相关教程</a>进行修改，别忘记设置script里type=”text/babel”，解决了部分问题，比如在IE下页面显示部分，但还是没有显示全。注意ES6是强制strict模式的，遇到报错</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SCRIPT1046: strict 模式下不允许一个属性有多个定义</span><br></pre></td></tr></table></figure>
 <p>由于用了elementUI，里面有一些重复的属性，从功能上考虑还是不删更好。<br>折腾半天还是不行，就转向了cli下。如果有小伙伴解决了这个问题欢迎分享。</p>
 <h2 id="cli"><a href="#cli" class="headerlink" title="cli"></a>cli</h2><p>在cli下开发就容易多了，按照网上查找的方法成功解决问题，记得npm装一下babel-polyfill</p>
@@ -488,7 +486,7 @@
     <strong>本文作者： </strong>herasu</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2019/02/28/踩坑小小记录/" title="踩坑小结">http://yoursite.com/2019/02/28/踩坑小小记录/</a>
+    <a href="http://yoursite.com/2019/02/28/踩坑小结/" title="踩坑小结">http://yoursite.com/2019/02/28/踩坑小结/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
