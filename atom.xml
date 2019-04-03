@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-02-28T13:04:40.348Z</updated>
+  <updated>2019-04-03T12:00:19.155Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>去除图片背景的在线网站</title>
+    <link href="http://yoursite.com/2019/04/03/%E5%8E%BB%E9%99%A4%E5%9B%BE%E7%89%87%E8%83%8C%E6%99%AF%E7%9A%84%E5%9C%A8%E7%BA%BF%E7%BD%91%E7%AB%99/"/>
+    <id>http://yoursite.com/2019/04/03/去除图片背景的在线网站/</id>
+    <published>2019-04-03T11:57:53.979Z</published>
+    <updated>2019-04-03T12:00:19.155Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近有需求对证件照的背景颜色进行替换，发现了这么一个宝藏网站<a href="https://www.remove.bg/" target="_blank" rel="noopener">removebg</a>。</p><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>号称全自动（不必手动选择背景/前景层来分隔它们），无需一次点击，只需五秒就可得到！</p><blockquote><p>使用复杂的AI技术来检测前景层并将它们与背景分开。为了改善结果，有几个额外的算法，例如改善细节和防止颜色污染。</p></blockquote><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>官方支持两种加载图片方式: <strong>本地文件上传 or 图片URL地址</strong>，操作非常简单，除了去掉原背景外还可以添加新的背景，包括纯色或图片，图片可以选择自带提供的也可以使用自己上传的。</p><p>个人使用的话，免费版就完全够了，无需注册，注册后还有每个月50次API调用与一张HD图像免费下载资格。</p><h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><p>支持最大文件大小为8 MB的JPG和PNG图像。每张图片必须包含至少一个可检测的人。</p><p>可以上传任何图像分辨率并选择以下输出尺寸之一，其中只有0.25百万像素是免费的。</p><table><thead><tr><th>画质</th><th>像素</th></tr></thead><tbody><tr><td>常规</td><td>高达0.25百万像素 - 例如625×400（free）</td></tr><tr><td>中等</td><td>高达1.5百万像素 - 例如1500×1000</td></tr><tr><td>高清</td><td>高达4百万像素 - 例如2500×1600 </td></tr><tr><td>4K</td><td>高达1000万像素 - 例如4000×2500</td></tr></tbody></table><h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><p>API目前仅支持：人物照片；支持八种环境的API使用。</p><p>API是一个简单的HTTP接口，有各种选项：</p><ul><li>源图像：直接上传或URL引用 </li><li>结果图像：图像文件或JSON编码数据 </li><li>输出分辨率：高达1000万像素 </li></ul><p>需要带有人物的图像，还有三个关于PHP、NODEJS、PYTHON的社区。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>该网站承诺（who knows）不会拿用户的照片用于训练，如果用户自愿给他们使用也可以。</p><p><strong>收费服务</strong>：相信大家用不上收费服务，这里可以直接看<a href="https://www.remove.bg/pricing" target="_blank" rel="noopener">官网</a>的价格套餐。</p><p>总的来说优点就是快，省事，简单，在线去背景，效果还不错。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近有需求对证件照的背景颜色进行替换，发现了这么一个宝藏网站&lt;a href=&quot;https://www.remove.bg/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;removebg&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot;
+      
+    
+    </summary>
+    
+      <category term="宝藏网站" scheme="http://yoursite.com/categories/%E5%AE%9D%E8%97%8F%E7%BD%91%E7%AB%99/"/>
+    
+    
+      <category term="在线网站" scheme="http://yoursite.com/tags/%E5%9C%A8%E7%BA%BF%E7%BD%91%E7%AB%99/"/>
+    
+      <category term="实用" scheme="http://yoursite.com/tags/%E5%AE%9E%E7%94%A8/"/>
+    
+      <category term="去背景" scheme="http://yoursite.com/tags/%E5%8E%BB%E8%83%8C%E6%99%AF/"/>
+    
+  </entry>
   
   <entry>
     <title>踩坑小结</title>
