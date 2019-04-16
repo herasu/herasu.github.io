@@ -311,6 +311,280 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/23/vue在线翻译练习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="herasu">
+      <meta itemprop="description" content="Be kind">
+      <meta itemprop="image" content="/images/night.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fish">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/23/vue在线翻译练习/" itemprop="url">
+                  vue在线翻译练习
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-23 21:38:36 / 修改时间：21:37:10" itemprop="dateCreated datePublished" datetime="2018-07-23T21:38:36+08:00">2018-07-23</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>刚开始接触Vue，想通过一些实例对其使用更加熟悉。</p>
+<h1 id="一、搭建过程与环境"><a href="#一、搭建过程与环境" class="headerlink" title="一、搭建过程与环境"></a>一、搭建过程与环境</h1><p>网上已经有很多教程可以参考，这里简单说一下流程。</p>
+<ol>
+<li>安装node.js，官网下载，直接下载node.js最新版本，避免版本过低影响使用</li>
+<li>安装vue-cli</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$npm install vue-cli -g</span><br></pre></td></tr></table></figure>
+<p>以上每一步步骤完成之后，使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$xxx -v</span><br></pre></td></tr></table></figure></p>
+<p>验证是否安装成功，但<strong>vue -V</strong>这里V需要大写。</p>
+<p>如下图，出现相应的版本号，则说明安装成功。</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsr8gn504fj20e304wglo.jpg" alt="image"></p>
+<blockquote>
+<p>vue-cli脚手架的优势：</p>
+<ul>
+<li>有一套成熟的vue项目架构设计,能够快速初始化一个Vue项目。</li>
+<li>vue-cli是官方支持的一个脚手架，会随本版本进行迭代更新。</li>
+<li>vue-cli提供了一套本地的node测试服务器，使用vue-cli自己提供的命令，就可以启动服务器。</li>
+<li>有一套vue结构配置，它可以帮助我们写好vue.js代码快速构建项目的工具。</li>
+<li>集成打包上线方案。</li>
+</ul>
+</blockquote>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsrty5cunrj211m0i8q5h.jpg" alt></p>
+<h1 id="二、创建项目"><a href="#二、创建项目" class="headerlink" title="二、创建项目"></a>二、创建项目</h1><p>官方文档参考：<a href="https://note.youdao.com/" target="_blank" rel="noopener">https://vuejs-templates.github.io/webpack/</a></p>
+<p>1.创建一个基于webpack模板的新项目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$vue init webpack my-project</span><br></pre></td></tr></table></figure></p>
+<p>my-project是项目的名称，由于目前还用不上太多别的功能，全都选择no。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsrtyy8rp5j20gq0c6jxf.jpg" alt></p>
+<p>2.进入目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$cd my-project</span><br></pre></td></tr></table></figure>
+<p>3.安装项目依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$npm install</span><br></pre></td></tr></table></figure>
+<p>4.启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$npm run dev</span><br></pre></td></tr></table></figure>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsrtz4t7s6j20ef05jmx3.jpg" alt></p>
+<p>到这里已经成功创建了一个vue项目。</p>
+<p>5.初始项目目录及说明：</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsrtzvdxqij205x090t8p.jpg" alt></p>
+<p><a href="https://note.youdao.com/" target="_blank" rel="noopener">https://blog.csdn.net/Solo95/article/details/72355098</a><br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru08a8pvj20ns0ed74s.jpg" alt></p>
+<p>6.打开浏览器，将看到右边的大logo：</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsrtx6wcjkj20wc0iwwt5.jpg" alt></p>
+<h1 id="三、实现过程"><a href="#三、实现过程" class="headerlink" title="三、实现过程"></a>三、实现过程</h1><p>包含三个组件：根组件App.vue展现内容、 输入表单部分组件Form.vue和输出展示部分组件Output.vue。</p>
+<p>首先在components目录下创建两个组件：Form.vue和Output.vue<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru0icp1pj20je03n74g.jpg" alt><br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru0mvkjuj20da04b0so.jpg" alt></p>
+<h2 id="1-Form-vue表单部分"><a href="#1-Form-vue表单部分" class="headerlink" title="1. Form.vue表单部分"></a>1. Form.vue表单部分</h2><p>1）</p>
+<ul>
+<li>主要结构<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru0t0ox8j20vz0buab4.jpg" alt></li>
+</ul>
+<p>2）</p>
+<ul>
+<li>给input绑定值==v-model=”textTodo”== ，并在data中声明</li>
+<li>实现点击button，监听事件 ==v-on:click=”formSubmit()”== 拿到输入的值</li>
+<li>采用事件注册的方法==this.$emit()==，默认一个参数，第一个参数formSubmit2为方法</li>
+<li>$emit自定义事件Vue自定义事件是为组件间通信设计，自定义事件提供 ==$on、$off、$once、$emit== 几个api<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru15lxgjj20ij0ee3yu.jpg" alt></li>
+</ul>
+<h2 id="2-App-vue"><a href="#2-App-vue" class="headerlink" title="2. App.vue"></a>2. App.vue</h2><p>1）</p>
+<ul>
+<li>根组件调用两个子组件的地方，是两者的联系点，所以在调用Form组件的地方监听this.$emit()中的方法</li>
+<li>根组件中需要用一个方法接收传过去的待翻译的内容，所以在Form组件的this.$emit()中加上参数textTodo，返回根组件transText方法添加形参text</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru1fn9z1j20f50ak3yv.jpg" alt></p>
+<p>2）</p>
+<ul>
+<li><p>使用 <a href="https://note.youdao.com/" target="_blank" rel="noopener">https://tech.yandex.com/</a> 的翻译Tranlsate API<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru1rjsfxj20m50cj0t5.jpg" alt></p>
+</li>
+<li><p>这里需要一个API Key，必须通过key请求翻译的一些文本内容<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru2261nsj20z50a9my7.jpg" alt></p>
+</li>
+<li><p>创建属于自己的API keys<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru26ncvoj20p106haa8.jpg" alt></p>
+</li>
+</ul>
+<ul>
+<li>在document里可以看到有很多语言，需要什么语言就将其code写入表单select的option的value值中去。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru2z15e6j20nv0geq3r.jpg" alt></li>
+</ul>
+<p>3）</p>
+<ul>
+<li>在使用http请求对应的接口前必须先安装Vue resource网络请求模块</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$npm install vue-resoure --save</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在main.js中引入这个模块，用Vue.use使用中间件引入，接着就可以使用http了，在发送请求后，使用then方法来处理响应结果，then方法有两个参数，第一个参数是响应成功时的回调函数</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// Lambda写法</span><br><span class="line">this.$http.get(&apos;/someUrl&apos;, [options]).then((response) =&gt; &#123;</span><br><span class="line">    // 响应成功回调</span><br><span class="line">&#125;, (response) =&gt; &#123;</span><br><span class="line">    // 响应错误回调</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru2at45gj20j808842n.jpg" alt></p>
+<p>4）</p>
+<ul>
+<li>之前给Form的方法transText()参数有languange和text </li>
+</ul>
+<p>==[解决选中语言的问题]==</p>
+<p>select上绑定一个==v-model=”language”== 在data中初始化，与之前传text同理，给formSubmit方法加一个参数language就好了，http.get中将lang的值修改为language</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru359m7wj20ps05yq39.jpg" alt></p>
+<ul>
+<li><p>请求完的返回值response通过箭头函数then返回，打印response，查看在body中有个text数组，我们需要的已翻译好的文本为数组中第0个值，因此使用==response.body.text[0]==<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru3alfd4j21hc0oc7ua.jpg" alt></p>
+</li>
+<li><p>接着将这个值赋值给transedText，而这个值应该传到Output.vue中去显示<br>绑定属性==v-text=”transedText”==<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru3hnu4dj20f50ak3yv.jpg" alt></p>
+</li>
+</ul>
+<h2 id="3-Output-vue"><a href="#3-Output-vue" class="headerlink" title="3.Output.vue"></a>3.Output.vue</h2><ul>
+<li>很简单，只需定义一个属性props，用于传值transedText，并显示出来。</li>
+<li>在vue中，组件实例的作用域是孤立的。这意味着不能并且不应该在子组件的模板内直接引用父组件的数据。可以使用 props 把数据传给子组件。</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru40rfhdj20hb088wek.jpg" alt></p>
+<h1 id="四、样式"><a href="#四、样式" class="headerlink" title="四、样式"></a>四、样式</h1><p><a href="https://note.youdao.com/" target="_blank" rel="noopener">https://github.com/iview/iview
+</a></p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru47syi6j20d60ahmyg.jpg" alt></p>
+<p>iview与使用vue-resource差不多</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru52wdukj20ge09s3yz.jpg" alt></p>
+<h1 id="五、打包"><a href="#五、打包" class="headerlink" title="五、打包"></a>五、打包</h1><p>vue-cli可以直接用以下命令快速打包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$npm run build</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru59msgxj20gb0gydgl.jpg" alt></p>
+<p>第一次打包好后打开是一片空白</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru5o39syj20hn04iq30.jpg" alt></p>
+<p>此处需要注意将文件index.js中的==assetsPublicPath==值改为相对路径（==/–&gt;./==），否则打包好后请求不到资源显示空白，因为vue是使用的绝对路径。</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru5i5b0qj20qp0e8q4w.jpg" alt></p>
+<p>改了以后整体页面显示，但静态文件还是没有</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru5vidtaj20o70oddh7.jpg" alt></p>
+<p>这两个404的文件所在路径能被正确访问应该是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/static/fonts/ionicons.05acfdb.woff</span><br><span class="line">/static/fonts/ionicons.24712f6.ttf</span><br></pre></td></tr></table></figure>
+<p>但是前面对了两级目录/static/css所以找不到</p>
+<p>参考<a href="https://note.youdao.com/" target="_blank" rel="noopener">https://juejin.im/post/5a75c8ce5188257a624c9ff1</a> 顺利解决！<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru60fmenj20ji05odg3.jpg" alt></p>
+<p>之后只需要将dist文件夹中的内容放到服务器上就可以访问了！<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fsru6a9henj20po0lzwfh.jpg" alt></p>
+<h1 id="六、收获与不足"><a href="#六、收获与不足" class="headerlink" title="六、收获与不足"></a>六、收获与不足</h1><h2 id="收获："><a href="#收获：" class="headerlink" title="收获："></a>收获：</h2><p>熟悉基础语法、核心功能、基础概念、使用iView安装依赖的模块、调用API的方法和构建项目到打包的过程。</p>
+<h2 id="不足："><a href="#不足：" class="headerlink" title="不足："></a>不足：</h2><p>布局简单，功能单一。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/22/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -489,7 +763,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -573,7 +847,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">25</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">28</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
