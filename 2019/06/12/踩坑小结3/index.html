@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="Fish">
 <meta property="og:description" content="1.路由传参undefined？上一节已经区分过两种传参方式，仍然在踩坑路上越走越远 12let routeData = this.$router.resolve(&amp;#123; name: &amp;apos;xxx&amp;apos;, params: &amp;#123; id: id &amp;#125;&amp;#125;)window.open(routeData.href, &amp;apos;_blank&amp;apos;) //新开页">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-12T13:43:52.762Z">
+<meta property="og:updated_time" content="2019-06-12T13:50:50.262Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="踩坑小结3">
 <meta name="twitter:description" content="1.路由传参undefined？上一节已经区分过两种传参方式，仍然在踩坑路上越走越远 12let routeData = this.$router.resolve(&amp;#123; name: &amp;apos;xxx&amp;apos;, params: &amp;#123; id: id &amp;#125;&amp;#125;)window.open(routeData.href, &amp;apos;_blank&amp;apos;) //新开页">
@@ -354,7 +354,7 @@
                 
               
 
-              <time title="创建时间：2019-06-12 21:45:58 / 修改时间：21:43:52" itemprop="dateCreated datePublished" datetime="2019-06-12T21:45:58+08:00">2019-06-12</time>
+              <time title="创建时间：2019-06-12 21:51:05 / 修改时间：21:50:50" itemprop="dateCreated datePublished" datetime="2019-06-12T21:51:05+08:00">2019-06-12</time>
             
 
             
@@ -438,7 +438,8 @@
 <li>es提案的import()</li>
 <li>webpack的require.ensure() (推荐)</li>
 </ul>
-<p>既然懒加载效果也不明显，那就进入正题！先用 <figure class="highlight plain"><figcaption><span>run build --report``` 查看各js占比。看了下占得较多的几个库，其中就有vue和elementUI，OK fine，把它们移出去，第一次打包上线ElementUI is not defined。</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">报错在这里 **module.exports = ElementUI;**</span><br><span class="line"></span><br><span class="line">原来不小心引入CDN时顺序错了，Vue要在ElementUI前引入，改了后以为这下总没问题了吧，结果还是找不到ElementUI，查了查说是</span><br><span class="line"></span><br><span class="line">&gt; [因为elementUI外部库对外暴露的全局变量是&apos;ELEMENT&apos;，引入其他外部库也是这样，必须填写外部库对外暴露的全局变量名。](https://segmentfault.com/q/1010000009568751)</span><br><span class="line"></span><br><span class="line">遇到一个问题，把整个ElementUI移出去了，但是想要使用其非中文的语言包，比如英语，只知道npm方式下如何在全局修改，如果同样要把locale 移除，在external中要怎么写？</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 7.vue-cli3静态资源加载404</span><br><span class="line"></span><br><span class="line">到最后打包完上线了，静态资源全部404，由于之前用vue-cli2所以每次改一下 </span><br><span class="line">**config&gt;index.js&gt;build:&#123;... assetsPublicPath: &apos;./&apos;, ...&#125;**</span><br><span class="line"></span><br><span class="line">现在vue-cli3的文件结构有多区别，需要自行配置，根目录新建文件 **vue.config.js**</span><br></pre></td></tr></table></figure></p>
+<p>既然懒加载效果也不明显，那就进入正题！先用 </p>
+<figure class="highlight plain"><figcaption><span>run build --report```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">查看各js占比。看了下占得较多的几个库，其中就有vue和elementUI，OK fine，把它们移出去，第一次打包上线ElementUI is not defined。</span><br><span class="line"></span><br><span class="line">报错在这里 **module.exports = ElementUI;**</span><br><span class="line"></span><br><span class="line">原来不小心引入CDN时顺序错了，Vue要在ElementUI前引入，改了后以为这下总没问题了吧，结果还是找不到ElementUI，查了查说是</span><br><span class="line"></span><br><span class="line">&gt; [因为elementUI外部库对外暴露的全局变量是&apos;ELEMENT&apos;，引入其他外部库也是这样，必须填写外部库对外暴露的全局变量名。](https://segmentfault.com/q/1010000009568751)</span><br><span class="line"></span><br><span class="line">遇到一个问题，把整个ElementUI移出去了，但是想要使用其非中文的语言包，比如英语，只知道npm方式下如何在全局修改，如果同样要把locale 移除，在external中要怎么写？</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 7.vue-cli3静态资源加载404</span><br><span class="line"></span><br><span class="line">到最后打包完上线了，静态资源全部404，由于之前用vue-cli2所以每次改一下 </span><br><span class="line">**config&gt;index.js&gt;build:&#123;... assetsPublicPath: &apos;./&apos;, ...&#125;**</span><br><span class="line"></span><br><span class="line">现在vue-cli3的文件结构有多区别，需要自行配置，根目录新建文件 **vue.config.js**</span><br></pre></td></tr></table></figure>
 <p>module.exports = {<br>    publicPath: “./“<br>}<br><code>`</code></p>
 
       
