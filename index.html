@@ -311,6 +311,232 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/09/Web中的点击拦截研究/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="herasu">
+      <meta itemprop="description" content="Be kind">
+      <meta itemprop="image" content="/images/night.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fish">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/09/Web中的点击拦截研究/" itemprop="url">
+                  Web中的点击拦截研究
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-09 11:38:15 / 修改时间：11:36:48" itemprop="dateCreated datePublished" datetime="2019-08-09T11:38:15+08:00">2019-08-09</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/论文笔记/" itemprop="url" rel="index"><span itemprop="name">论文笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Web中的点击拦截研究"><a href="#Web中的点击拦截研究" class="headerlink" title="Web中的点击拦截研究"></a>Web中的点击拦截研究</h1><p><strong>原文作者</strong>：Mingxue Zhang, Wei Meng, Sangho Lee, Byoungyoung Lee ,Xinyu Xing</p>
+<p><strong>原文标题</strong>：All Your Clicks Belong to Me: Investigating Click Interception on the Web</p>
+<p><strong>原文会议</strong>：Proceedings of the 28th USENIX Security Symposium (USENIX Security), Santa Clara, US, August 2019.</p>
+<p><strong>原文链接</strong>：<a href="https://www.usenix.org/system/files/sec19fall_zhang_prepub.pdf" target="_blank" rel="noopener">https://www.usenix.org/system/files/sec19fall_zhang_prepub.pdf</a></p>
+<p>用户与Web应用交互主要通过点击事件，那么web中广告投放也不会放过拦截用户点击行为以获取利益。文章系统地研究了Web中的点击拦截实例，开发了一个基于浏览器的分析框架OBSERVER，用于收集和分析与点击相关的行为。文章作者使用OBSERVER，确定了三种不同的技术来拦截Alexa前250K网站上的用户点击，并检测到613个网站上437个截取用户点击的第三方脚本，这些网站平均每天可收到4300万次访问。通过拦截用户点击行为不仅是投放广告获利的手段之一，拦截用户点击行为还会让用户接触到诸如诈骗软件等恶意内容。</p>
+<h2 id="作者的工作："><a href="#作者的工作：" class="headerlink" title="作者的工作："></a>作者的工作：</h2><p>作者基于开源Web浏览器Chromium，开发了一个框架OBSERVER，该框架可以识别出web应用中点击劫持行为，用户在使用web应用时对此类恶意行为的重视。整篇文章作者对研究背景进行描述总结，详细阐述了关键技术方法、实现与评估，同时还有局限性思考和未来相关工作的总结。</p>
+<h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><p>点击HTML元素是用户与Web应用程序交互的主要方式。已知的用户劫持点击行为包括<strong>UI redressing attacks</strong>，还有利用<strong>bots to automatically and massively send fake click traffic</strong>，用来点击广告获取利益，当这些行为已不再有效时，攻击者就盯上了重定向用户的点击。例如，“浏览者重定向病毒” 将用户的默认搜索引擎修改为恶意搜索引擎，当用户点击搜索结果时将用户重定向到广告页面。恶意第三方iframe可以自动将用户重定向到广告页面，当脚本在点击时打开新tab时，用户的当tab可以自动重定向到非预期目标页。谷歌最近发布了新版Chrome浏览器，以阻止某些特定类型的自动重定向。尽管如此，Chrome仍然无法检测并阻止其他可能的方法来拦截用户点击，包括但不限于由第三方脚本修改的链接，伪装成第一方内容的第三方内容以及透明覆盖等恶意行为。</p>
+<h3 id="1-1-措施"><a href="#1-1-措施" class="headerlink" title="1.1 措施"></a>1.1 措施</h3><p>作者认为有必要对点击拦截进行系统研究，以深入了解这一新出现的网络用户威胁。因此开发一个系统，以自动检测Web上的此类实例，并研究哪些技术是被用来劫持用户点击以及发起这种行为的人。</p>
+<p>文章结构安排：首先设计和开发一个系统来检测JavaScript用来拦截用户点击的各种技术。然后，作者使用这个系统进行大规模测量，目的是找出那些劫持链接并欺骗用户点击的从业者。最后，作者分析测量结果，并探索隐藏在点击拦截实践背后的意图和后果。</p>
+<h3 id="1-2-挑战"><a href="#1-2-挑战" class="headerlink" title="1.2 挑战"></a>1.2 挑战</h3><p>由于Web应用程序的动态和事件驱动特性，执行上述系统研究具有挑战性。</p>
+<p>1，可以动态加载JS代码。只对HTML源代码静态分析是无法涵盖拦截用户点击的所有脚本。</p>
+<p>2，超链接可以由任何脚本动态创建和修改。为了确定一个脚本是否真正可以用于拦截，需要重新设计浏览器以区分不同脚本运行时的操作。</p>
+<p>3，JS可以通过事件侦听器（handlers）动态地将URL绑定到任意HTML元素。</p>
+<p>4，网页可能包含大量响应用户点击的事件处理程序。</p>
+<h3 id="1-3-应对"><a href="#1-3-应对" class="headerlink" title="1.3 应对"></a>1.3 应对</h3><p>通过四个步骤对一个网站的所有可能涉及到劫持点击行为的地方的相关属性进行记录。</p>
+<p>首先，在浏览器的渲染器中调解网页中JavaScript对超链接的所有访问。<br>通过这种方式可以识别与每个超链接关联的URL的发起者。</p>
+<p>其次，监视JavaScript对象的创建和执行，以便我们可以追踪动态内联JS代码。</p>
+<p>第三，监视所有在每个HTML元素上注册的事件处理程序以及与导航相关的JS API。</p>
+<p>最后，导出导航网址。</p>
+<h3 id="1-4-贡献"><a href="#1-4-贡献" class="headerlink" title="1.4 贡献"></a>1.4 贡献</h3><p>•作者设计和开发OBSERVER，一个研究点击拦截实践的框架。这有助于我们自动检测各种网站上的各种点击拦截案例。</p>
+<p>•作者进行了大规模测量研究，以探索和了解攻击者如何在实际环境中操纵网页拦截用户点击。 </p>
+<p>•作者描述了Alexa 前250K网站上点击拦截的活动，并发现了点击截取行为背后隐藏的意图和后果。</p>
+<h2 id="二、框架概要"><a href="#二、框架概要" class="headerlink" title="二、框架概要"></a>二、框架概要</h2><p>在本节中，我们首先概述了OBSERVER框架，旨在全面记录JS代码执行的所有潜在点击拦截相关事件。关注三类JS会使用的基本操作劫持用户点击行为：</p>
+<p>1）修改页面中的现有超链接; </p>
+<p>2）在页面中创建新的超链接; </p>
+<p>3）向HTML元素注册事件处理程序以挂钩用户点击。</p>
+<p>每当OBSERVER识别出任何此类操作时，它都会使用启动操作的脚本的唯一标识来标记相应的元素。 此外，OBSERVER记录在故意点击与页面中的事件处理程序相关联的超链接或元素之后的反应，以便知道点击拦截后引导用户去向哪个URL。</p>
+<h3 id="2-1-威胁模型"><a href="#2-1-威胁模型" class="headerlink" title="2.1 威胁模型"></a>2.1 威胁模型</h3><p>作者只考虑第三方JS脚本为恶意的，因为第一方对页面有完全的控制权。</p>
+<h3 id="2-2-记录对网页中所有超链接的任何访问"><a href="#2-2-记录对网页中所有超链接的任何访问" class="headerlink" title="2.2 记录对网页中所有超链接的任何访问"></a>2.2 记录对网页中所有超链接的任何访问</h3><p>在HTML中，使用锚元素（即，<code>&lt;a&gt;</code>标签）来定义超链接，并且其href属性值为目标URL。因此，通过监视和记录哪个脚本修改了<code>&lt;a&gt;</code>标签的href属性，OBSERVER能够识别脚本的潜在点击拦截。不论是直接使用原生JS修改href属性值还是利用JQ等第三方库修改，OBSERVER都可以识别到，因为这些方式仍然需要调用DOM标准中定义的上述API，这是由所有浏览器实现的，以确保跨浏览器的兼容性。具体方式是OBSERVER hook所有这些DOM API，以监视DOM中<code>&lt;a&gt;</code>标签的href属性的修改。它拦截对这些API的任何调用。截获后，它会检查当前的JS调用堆栈，再在调用堆栈中找到底部JS框架，以找到发起API调用的JS函数。</p>
+<h4 id="2-2-1-脚本识别"><a href="#2-2-1-脚本识别" class="headerlink" title="2.2.1 脚本识别"></a>2.2.1 脚本识别</h4><p>在上个步骤找到了发起API调用的JS函数后，要将该API调用归于特定脚本，需要获取访问JS代码的标识。 OBSERVER为每个脚本对象分配一个scriptID，以便在JS运行时唯一地标识它。</p>
+<p>在HTML中，JS代码常以三种方式引入：</p>
+<ul>
+<li>作为内联脚本包含在<script>和</script>标记之间。</li>
+<li>存储在外部JavaScript文件夹中，并作为外部脚本加载<script>标记。</li>
+<li>JavaScript代码可以作为事件监听器写入HTML元素。</li>
+</ul>
+<p>每个<code>&lt;script&gt;</code> 标签都编译为JavaScript引擎中的单个JavaScript对象。还有其他类型的内联JavaScript代码。例如，JavaScript代码可以作为事件监听器写入HTML元素的贡献。未包含在<br><code>&lt;script&gt;</code> 标签内的内联脚本也会编译为单独的JavaScript对象，这些对象由唯一的scriptID标识。</p>
+<p>OBSERVER将脚本的scriptID与其sourceURL相关联，sourceURL是浏览器用于加载远程JavaScript代码的URL。但内联脚本的sourceURL为空，那么就使用浏览器用于将HTML文档加载到嵌入框架中的URL作为静态内联脚本的sourceURL。对于通过JavaScript创建内联脚本的情况将在之后讨论。除了scriptID之外，我们还在与元素关联的shadow数据存储中记录函数的行号，列号和名称。值得注意的是，JavaScript代码无法修改shadow数据存储，因为它是一个在JavaScript端不可写的C++数据结构。</p>
+<h3 id="2-3-追踪动态元素创建"><a href="#2-3-追踪动态元素创建" class="headerlink" title="2.3 追踪动态元素创建"></a>2.3 追踪动态元素创建</h3><p>在网页中动态创建新的超链接是拦截用户点击的另一种方法。OBSERVER考虑了脚本可以实现此目标的直接和间接方法：1）创建超链接，2）创建 创建超链接的脚本。</p>
+<h4 id="2-3-1-直接方式–HTML锚元素"><a href="#2-3-1-直接方式–HTML锚元素" class="headerlink" title="2.3.1 直接方式–HTML锚元素"></a>2.3.1 直接方式–HTML锚元素</h4><p>JavaScript代码可以在网页中动态创建任何HTML元素，包括锚元素。</p>
+<p>具体来说，JavaScript可以通过多种API将新的<code>&lt;a&gt;</code>标签插入到网页的DOM树中。利用这些技术可以拦截用户点击。</p>
+<p>OBSERVER需要跟踪浏览器中<code>&lt;a&gt;</code>标签的动态创建。 OBSERVER将shadow initiator属性附加到DOM树中的每个锚元素，以表示对象的创建者。 initiator属性值是创建相应元素的脚本的scriptID。OBSERVER为浏览器解析器构建的所有静态元素分配一个特殊的initiator值O，它表示文档的所有者。静态<code>&lt;a&gt;</code>标签是第一方超链接。 OBSERVER拦截Web浏览器中的所有元素创建API，以便找到调用堆栈中的JavaScript框架。发起创建行为的脚本的scriptID用作动态创建的元素（超链接）的启动器。OBSERVER还会记录动态创建的锚元素的任何对href的访问。</p>
+<h4 id="2-3-2-间接方式–JS脚本"><a href="#2-3-2-间接方式–JS脚本" class="headerlink" title="2.3.2 间接方式–JS脚本"></a>2.3.2 间接方式–JS脚本</h4><p>JavaScript代码也可以在Web应用程序中动态生成，就像HTML元素一样。<code>&lt;script&gt;</code> 作为一个HTML元素类，可以由JavaScript动态创建。OBSERVER旨在为所有这些动态创建的脚本分配唯一标识。如果将外部脚本文件从远程主机加载到动态插入的 <code>&lt;script&gt;</code> 元素中，则获取其标识与获取一个静态 <code>&lt;script&gt;</code> 元素的sourceURL没有区别。</p>
+<p>但是，识别动态生成的内联脚本的标识并不简单，因为它的sourceURL是空白的。为了克服这种困难，OBSERVER hook用于生成动态脚本的API。它将调用脚本生成API的JavaScript代码的sourceURL保存为新生成的内联脚本的sourceURL。OBSERVER记录父脚本的scriptID作为子脚本的parentScriptID属性。最初由文档所有者静态嵌入的所有脚本的parentScriptID设置为O。OBSERVER还记录对任何DOM对象的任何内联事件处理程序的所有访问，它遍历所有脚本，将内联事件处理程序设置为其父脚本，并从中得到sourceURL。</p>
+<p>如果找不到这样的条目，OBSERVER会将创建接收者对象的脚本设置为其父脚本。</p>
+<h3 id="2-4-监控JavaScript事件监听器"><a href="#2-4-监控JavaScript事件监听器" class="headerlink" title="2.4 监控JavaScript事件监听器"></a>2.4 监控JavaScript事件监听器</h3><p>不需要修改或创建一个超链接，直接监听现有的HTML元素上的事件侦听器也能达到一样的效果。事件侦听器的作用是当用户点击已绑定侦听器的元素时，会触发该事件，事件处理程序则异步执行一些操作。也许是任意打开一个URL或者悄悄地发起某些请求。于是OBSERVE旨在监控这些事件侦听器看看是否会导航用户到不同的URL去。</p>
+<h3 id="2-5-视觉欺骗"><a href="#2-5-视觉欺骗" class="headerlink" title="2.5 视觉欺骗"></a>2.5 视觉欺骗</h3><p>作者确定了两种可能的视觉欺骗：模仿和透明叠加。<br>都是字面意思，模仿就是弄一个和真实网站中部分内容类似的，使用户不仔细看以为是正常的就去点击；透明叠加是将恶意内容覆盖到原本正常内容之上，修改透明度使用户不易察觉。</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t87zprgpj20kh0dc78f.jpg" alt=""></p>
+<p>例如左边黄色线框内，小字是sponsored，与上下红色框做得很像，诱使用户点击。<br>右边青色线框标记的全是第三方内容，由于覆盖在第一方内容之上，用户无论点哪都会触发第三方脚本预先设定好的点击事件。</p>
+<h3 id="2-6-部署"><a href="#2-6-部署" class="headerlink" title="2.6 部署"></a>2.6 部署</h3><p>Chromium browser (version 64.0.3282.186)</p>
+<h2 id="三、方法"><a href="#三、方法" class="headerlink" title="三、方法"></a>三、方法</h2><h3 id="3-1-数据集"><a href="#3-1-数据集" class="headerlink" title="3.1 数据集"></a>3.1 数据集</h3><p>Alexa前250K网站。有效网站为228,614个。</p>
+<p>两个步骤获取数据：1）在页面渲染后立即收集原始数据; 2）通过与渲染页面交互来收集反应数据。 首先OBSERVER等待最多45秒，是为了让浏览器完全呈现页面。</p>
+<p>之后，在页面中插入一个脚本以预先遍历DOM树，以收集OBSERVER已记录的每个元素的所有数据，还记录每个元素的几个显示属性（宽度，高度，位置，不透明度等），以研究可用于拦截用户点击的其他技巧（例如，某些第三方内容与之重叠或出现 类似于第一方内容）。</p>
+<p>然后，将当前DOM树的快照保存到外部HTML文件夹中。通过Selenium自动点击DOM树中的所有元素，触发click事件侦听器和超链接导航以收集导航日志。</p>
+<h3 id="3-2-第三方脚本检测"><a href="#3-2-第三方脚本检测" class="headerlink" title="3.2 第三方脚本检测"></a>3.2 第三方脚本检测</h3><p>由于作者认定第一方脚本具有高度完全的权力去操控任意元素，所以其行为不被认定为攻击，识别出第三方脚本就至关重要。主要通过判定该网站所属域以及加载的各个脚本所属域是否是同一组织或个人。该判断并不是100%准确的。</p>
+<h3 id="3-3-拦截检测"><a href="#3-3-拦截检测" class="headerlink" title="3.3 拦截检测"></a>3.3 拦截检测</h3><p>对三种方式（超链接、事件侦听器、视觉欺骗）进行拦截点击的方法第二节描述过。</p>
+<h3 id="3-4-逃避检测"><a href="#3-4-逃避检测" class="headerlink" title="3.4 逃避检测"></a>3.4 逃避检测</h3><p>一些第三方脚本有选择地拦截用户点击。通过限制拦截点击的速度，避免用户的怀疑。还有些脚本仅在用户第一次访问页面时才会在其事件处理程序中激活相关的代码。这可以通过在用户的浏览器中删除cookie来实现。</p>
+<h3 id="3-5-实验结果"><a href="#3-5-实验结果" class="headerlink" title="3.5 实验结果"></a>3.5 实验结果</h3><h4 id="3-5-1-第三方脚本识别"><a href="#3-5-1-第三方脚本识别" class="headerlink" title="3.5.1 第三方脚本识别"></a>3.5.1 第三方脚本识别</h4><p>三大类技术，分别是超链接、事件处理器、视觉欺骗。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t7p3c6iwj20je0ckgne.jpg" alt=""></p>
+<h4 id="3-5-2-第三方代码加载方式"><a href="#3-5-2-第三方代码加载方式" class="headerlink" title="3.5.2 第三方代码加载方式"></a>3.5.2 第三方代码加载方式</h4><p>从下表可以看出，由第一方脚本静态引入第三方脚本是最常用的方法。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t7r0n9jhj20jx06u3z8.jpg" alt=""></p>
+<h3 id="3-6-点击拦截缘由与影响"><a href="#3-6-点击拦截缘由与影响" class="headerlink" title="3.6 点击拦截缘由与影响"></a>3.6 点击拦截缘由与影响</h3><ol>
+<li>盈利，主要是广告与欺骗用户点击广告。</li>
+<li>传播恶意内容，自动下载恶意软件等。</li>
+</ol>
+<h2 id="四、讨论与将来工作"><a href="#四、讨论与将来工作" class="headerlink" title="四、讨论与将来工作"></a>四、讨论与将来工作</h2><p>作者从第三方脚本识别、检测范围（网站数量）、区分真实点击与自动化测试软件的模拟点击、生成安全警告与使浏览器自动执行一些策略来防止点击被拦截五个方面来讨论。</p>
+<p>第三方脚本识别问题作者是使用了域名作为判断依据，如何判断不同脚本来自同一个域比较复杂，感兴趣的可以看看原文。</p>
+<p>检测范围是Alexa前250K个网站的主页面，子页面没有检测。</p>
+<p>作者使用了selenium去驱动OBSERVE与网站进行交互，但是区分真实点击与这种自动化工具生成的模拟点击也是一个研究方向。</p>
+<p>已知存在这种安全威胁后，作者提出两点进行防御，一是生成安全警告让用户决定是否继续访问，二是安全策略确保链接与点击为整体，不会被任何第三方脚本修改。</p>
+<h2 id="五、思考"><a href="#五、思考" class="headerlink" title="五、思考"></a>五、思考</h2><p>从最后作者提出的几个待解决的问题来说，到目前为止没有很好的方法去解决，我们可以沿着这些思路继续研究下去。作者的工作量很大，涵盖的点击事件可能性全面，只是有些点击行为较为主观不好定义为是正常的还是恶意的。</p>
+</script></li></ul>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/12/踩坑小结3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1090,225 +1316,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/13/圣杯布局与双飞翼布局小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="herasu">
-      <meta itemprop="description" content="Be kind">
-      <meta itemprop="image" content="/images/night.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fish">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/13/圣杯布局与双飞翼布局小结/" itemprop="url">
-                  圣杯布局与双飞翼布局小结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-12-13 20:55:32 / 修改时间：20:54:48" itemprop="dateCreated datePublished" datetime="2018-12-13T20:55:32+08:00">2018-12-13</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在学习CSS布局中，三栏布局中的圣杯布局和双飞翼布局应用很广泛，并不是说完成左右宽度固定中间宽度自适应这类布局的时候一定要用这两个布局的原理去实现，实现同一个布局的方法很多，我们应该根据需求去选择。</p>
-<p>不论是圣杯布局还是双飞翼布局其HTML的DOM结构都是按照中间—左侧—右侧的顺序，相应地也是按这个顺序进行加载，也就是我们常说的“重要的内容先加载”。</p>
-<h1 id="圣杯布局"><a href="#圣杯布局" class="headerlink" title="圣杯布局"></a>圣杯布局</h1><h2 id="STEP-1-CREATE-THE-FRAME"><a href="#STEP-1-CREATE-THE-FRAME" class="headerlink" title="STEP 1: CREATE THE FRAME"></a>STEP 1: CREATE THE FRAME</h2><p>先写好整体框架</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;header&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;container&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;footer&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>用希望左右列占据的宽度作为内边距填充容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#container &#123;</span><br><span class="line">  padding-left: 200px;   /* 左列宽度 */</span><br><span class="line">  padding-right: 150px;  /* 右列宽度 */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dsakfdcj20f009q74c.jpg" alt></p>
-<h2 id="STEP-2-ADD-THE-COLUMNS"><a href="#STEP-2-ADD-THE-COLUMNS" class="headerlink" title="STEP 2: ADD THE COLUMNS"></a>STEP 2: ADD THE COLUMNS</h2><p>加入具体的左中右三列，注意中间要放在前面</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;header&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;container&quot;&gt;</span><br><span class="line">  &lt;div id=&quot;center&quot; class=&quot;column&quot;&gt;&lt;/div&gt;</span><br><span class="line">  &lt;div id=&quot;left&quot; class=&quot;column&quot;&gt;&lt;/div&gt;</span><br><span class="line">  &lt;div id=&quot;right&quot; class=&quot;column&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;footer&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>接着相应的CSS</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#container .column &#123;</span><br><span class="line">  float: left;</span><br><span class="line">&#125;</span><br><span class="line">#center &#123;</span><br><span class="line">  width: 100%;  /*指的是除了padding的container的div宽度*/</span><br><span class="line">&#125;</span><br><span class="line">#left &#123;</span><br><span class="line">  width: 200px;</span><br><span class="line">&#125;</span><br><span class="line">#right &#123;</span><br><span class="line">  width: 150px; </span><br><span class="line">&#125;</span><br><span class="line">#footer &#123;</span><br><span class="line">  clear: both;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>由于中间列宽度是100%，所以左列和右列被挤到下面了</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dstgtsdj20f009q0st.jpg" alt></p>
-<h2 id="STEP-3-PULL-THE-LEFT-COLUMN-INTO-PLACE"><a href="#STEP-3-PULL-THE-LEFT-COLUMN-INTO-PLACE" class="headerlink" title="STEP 3: PULL THE LEFT COLUMN INTO PLACE"></a>STEP 3: PULL THE LEFT COLUMN INTO PLACE</h2><p>现在需要将左右两列给弄到上面中间列左右空出来的padding的位置去</p>
-<p>中间列已经在它该在的位置了，所以先不处理它</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#left &#123;</span><br><span class="line">  width: 200px;</span><br><span class="line">  margin-left: -100%;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dugbt3ug20f009qt8l.gif" alt></p>
-<p>这里用100%的负边距将左列移到中间列的最左侧，这100%表示的是container这个div的宽度，也相当于中间列的宽度。现在左列已经上去了，但没有去到该去的位置（padding-left:200px)，这时用到了定位position，right:200px这条CSS将左列往左推了200px,也就是它自己的宽度</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#container .columns &#123;</span><br><span class="line">  float: left;</span><br><span class="line">  position: relative;</span><br><span class="line">&#125;</span><br><span class="line">#left &#123;</span><br><span class="line">  width: 200px;</span><br><span class="line">  margin-left: -100%;</span><br><span class="line">  right: 200px;        /* 自身宽度 */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dtbaicbj20f009qq2y.jpg" alt></p>
-<h2 id="STEP-4-PULL-THE-RIGHT-COLUMN-INTO-PLACE"><a href="#STEP-4-PULL-THE-RIGHT-COLUMN-INTO-PLACE" class="headerlink" title="STEP 4: PULL THE RIGHT COLUMN INTO PLACE"></a>STEP 4: PULL THE RIGHT COLUMN INTO PLACE</h2><p>由于左侧列离开了原来的位置，右列就会自然而然的流过去占据以前左列的位置，那现在怎么把右侧移到它该去的位置呢？（预留的padding-right：150px）同样使用负边距</p>
-<ul>
-<li>方法一：与操作左列一样， margin-left: -100%后会到中间列的最左侧，此时利用定位将右列向右推倒最右边，设置为left:100%，这100%表示中间列的宽度</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#right &#123;</span><br><span class="line">   width: 150px;</span><br><span class="line">   margin-left: -100%;</span><br><span class="line">   left:100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>方法二：使用margin-right，设置为-150px,即右列的宽度；或者设置为-100%，这里100%还是指的container这个div的宽度，也就是中间列的宽度。事实上只要外边距的绝对值大于其自身的宽度即150px均能达到这个效果。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#right &#123;</span><br><span class="line">  width: 150px;</span><br><span class="line">  margin-right: -150px;  /* 自身宽度 */</span><br><span class="line">  //margin-right: -100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>到此就将它们的位置放对了。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dv37qujj20f009qmx5.jpg" alt></p>
-<h2 id="STEP-5-DESIGN-DEFENSIVELY"><a href="#STEP-5-DESIGN-DEFENSIVELY" class="headerlink" title="STEP 5: DESIGN DEFENSIVELY"></a>STEP 5: DESIGN DEFENSIVELY</h2><p>如果浏览器窗口缩小，中间列宽度小于左列的话，这个布局在标准浏览器中会垮掉，因此有必要设定一个最小宽度</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">  min-width: 550px;  /* 2倍左列宽度+右列宽度 */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="STEP-6-EQUAL-HEIGHT-COLUMNS"><a href="#STEP-6-EQUAL-HEIGHT-COLUMNS" class="headerlink" title="STEP 6: EQUAL-HEIGHT COLUMNS"></a>STEP 6: EQUAL-HEIGHT COLUMNS</h2><p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dv7awkcj21gv0p677d.jpg" alt></p>
-<p>此时很容易出现三列不等高的情况，这个问题容易解决，常用的方法是利用内边距比负外边距绝对值大一点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#container .column &#123;</span><br><span class="line">  padding-bottom: 20010px; </span><br><span class="line">  margin-bottom: -20000px;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>为防止溢出，为外层div添加上</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#container &#123;</span><br><span class="line">	padding-left: 200px;    /* 左列宽度 */</span><br><span class="line">	padding-right: 150px;  /* 右列宽度 */</span><br><span class="line">	overflow: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>实际上当container内容区没有浏览器窗口大的时候页脚也会出现一部分空白，所以在这种情况下若需要页脚们可以讲内容区设置固定高度后再添加页脚</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dz8ze6oj21h90qcjva.jpg" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#container .column &#123;</span><br><span class="line">	height: 1200px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="双飞翼布局"><a href="#双飞翼布局" class="headerlink" title="双飞翼布局"></a>双飞翼布局</h1><p>双飞翼这个布局来源于淘宝的页面布局，是源于对页面的形象表达。</p>
-<h2 id="第一步-确定结构"><a href="#第一步-确定结构" class="headerlink" title="第一步 确定结构"></a>第一步 确定结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">　　&lt;div class=&quot;center&quot;&gt;中间&lt;/div&gt;</span><br><span class="line">　　&lt;div class=&quot;left&quot;&gt;左&lt;/div&gt;</span><br><span class="line">　　&lt;div class=&quot;right&quot;&gt;右&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>现在的问题是在不改变DOM结构的情况下如何让center展示在中间呢</p>
-<h2 id="第二步-基本CSS"><a href="#第二步-基本CSS" class="headerlink" title="第二步 基本CSS"></a>第二步 基本CSS</h2><p>这时CSS就要发挥其作用了，将container容器定义一个100%的宽度，对其中每个部分，中左右都设置为浮动，这跟圣杯布局中是一样的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">.container&#123; </span><br><span class="line">    width:100%;</span><br><span class="line">&#125;</span><br><span class="line">.center &#123; </span><br><span class="line">    float:left; </span><br><span class="line">    width:100%; </span><br><span class="line">&#125;</span><br><span class="line">.left &#123; </span><br><span class="line">    float:left; </span><br><span class="line">    width:200px;</span><br><span class="line">&#125;</span><br><span class="line">.right &#123; </span><br><span class="line">    float:left; </span><br><span class="line">    width:150px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>此时中间占据了整个宽度，左右两侧自然也被挤下去了。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5e8qq4ltj21h00igwer.jpg" alt></p>
-<h2 id="第三步-确定各列正确位置"><a href="#第三步-确定各列正确位置" class="headerlink" title="第三步 确定各列正确位置"></a>第三步 确定各列正确位置</h2><p>左外边距为-100%，在浮动情况下，负外边距会导致div上移，而使用-100%可以确保它移动到最左侧。对右侧也设置该属性，值为-150px，注意负外边距一定等于该div的宽度才会刚好在最右侧</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.left &#123; </span><br><span class="line">    margin-left:-100%; </span><br><span class="line">&#125;</span><br><span class="line">.right &#123; </span><br><span class="line">     margin-left:-150px;   /* 自身宽度 */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5eawy4e3j21gx0a1t8q.jpg" alt></p>
-<p>注意这里和圣杯布局的区别，圣杯布局是将右侧的属性设定为右外边距，原因在于在圣杯布局中，一开始我们将是希望左右列占据的宽度作为container这个div的内边距去填充的，而在双飞翼布局中，并没有给container设置padding属性，也就是说到目前为止container的内容区宽度（不包括padding、margin和border）占据了整个浏览器视口。细心的同学可能发现了，中间文本去哪了呢？接下来就解决这个问题</p>
-<h2 id="第四步-让中间列正确显示"><a href="#第四步-让中间列正确显示" class="headerlink" title="第四步 让中间列正确显示"></a>第四步 让中间列正确显示</h2><p>经过上述的设置，中间列两侧的内容会被左右两列给挡住，为了解决这个问题，下面是淘宝的做法：</p>
-<p>1、DOM结构的改变：在.center下再次添加一个class=”wrap”的容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">　　&lt;div class=&quot;center&quot;&gt;</span><br><span class="line">　　    &lt;div class=&quot;wrap&quot;&gt;中间&lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">　　&lt;div class=&quot;left&quot;&gt;左&lt;/div&gt;</span><br><span class="line">　　&lt;div class=&quot;right&quot;&gt;右&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>2、利用CSS调整wrap的位置，就是把左右被挡住的部分，设置为wrap这个div的左、右外边距即可，最终的CSS如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">.container &#123; </span><br><span class="line">	width:100%; </span><br><span class="line">&#125;</span><br><span class="line">.container .center &#123; </span><br><span class="line">	float:left;</span><br><span class="line">	width:100%; </span><br><span class="line">&#125;</span><br><span class="line">.container .center .wrap &#123;</span><br><span class="line">    margin-left:200px;    /*大于等于左侧宽度*/</span><br><span class="line">    margin-right:150px;   /*大于等于右侧宽度*/</span><br><span class="line">&#125;</span><br><span class="line">.left &#123;</span><br><span class="line">	 float:left; </span><br><span class="line">	 width:200px; </span><br><span class="line">	 margin-left:-100%;</span><br><span class="line">&#125;</span><br><span class="line">.right &#123;</span><br><span class="line">	 float:left; </span><br><span class="line">	 width:150px; </span><br><span class="line">	 margin-left:-150px; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5ejwjtlej21gx09mmx6.jpg" alt></p>
-<p>到此已实现了基本功能，等高柱也可以按圣杯布局中同样的方法设定，至于样式上的调整此处不再赘述。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>事实上，圣杯布局其实和双飞翼布局是一回事。它们实现的都是三栏布局，两边的盒子宽度固定，中间盒子宽度自适应。它们实现的效果是一样的，差别在于其实现的过程与思想。实际应用中还应灵活使用，根据需要调整。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://alistapart.com/article/holygrail" target="_blank" rel="noopener">圣杯布局</a></p>
-<p><a href="http://www.cnblogs.com/langzs/archive/2013/01/27/taobaoshuangfeiyi.html" target="_blank" rel="noopener">双飞翼布局</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1358,7 +1365,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1456,7 +1463,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">32</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">34</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

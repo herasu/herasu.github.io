@@ -1,0 +1,1036 @@
+﻿<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: "in"
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Web中的点击拦截研究原文作者：Mingxue Zhang, Wei Meng, Sangho Lee, Byoungyoung Lee ,Xinyu Xing 原文标题：All Your Clicks Belong to Me: Investigating Click Interception on the Web 原文会议：Proceedings of the 28th USENIX Secu">
+<meta name="keywords" content="web security,USENIX 2019,Click Interception">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web中的点击拦截研究">
+<meta property="og:url" content="http://yoursite.com/2019/08/09/Web中的点击拦截研究/index.html">
+<meta property="og:site_name" content="Fish">
+<meta property="og:description" content="Web中的点击拦截研究原文作者：Mingxue Zhang, Wei Meng, Sangho Lee, Byoungyoung Lee ,Xinyu Xing 原文标题：All Your Clicks Belong to Me: Investigating Click Interception on the Web 原文会议：Proceedings of the 28th USENIX Secu">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-09T03:36:48.893Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Web中的点击拦截研究">
+<meta name="twitter:description" content="Web中的点击拦截研究原文作者：Mingxue Zhang, Wei Meng, Sangho Lee, Byoungyoung Lee ,Xinyu Xing 原文标题：All Your Clicks Belong to Me: Investigating Click Interception on the Web 原文会议：Proceedings of the 28th USENIX Secu">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Fish" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/08/09/Web中的点击拦截研究/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Web中的点击拦截研究 | Fish</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/herasu" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fish</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Cheer</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/09/Web中的点击拦截研究/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="herasu">
+      <meta itemprop="description" content="Be kind">
+      <meta itemprop="image" content="/images/night.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fish">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Web中的点击拦截研究
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-09 11:38:15 / 修改时间：11:36:48" itemprop="dateCreated datePublished" datetime="2019-08-09T11:38:15+08:00">2019-08-09</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/论文笔记/" itemprop="url" rel="index"><span itemprop="name">论文笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Web中的点击拦截研究"><a href="#Web中的点击拦截研究" class="headerlink" title="Web中的点击拦截研究"></a>Web中的点击拦截研究</h1><p><strong>原文作者</strong>：Mingxue Zhang, Wei Meng, Sangho Lee, Byoungyoung Lee ,Xinyu Xing</p>
+<p><strong>原文标题</strong>：All Your Clicks Belong to Me: Investigating Click Interception on the Web</p>
+<p><strong>原文会议</strong>：Proceedings of the 28th USENIX Security Symposium (USENIX Security), Santa Clara, US, August 2019.</p>
+<p><strong>原文链接</strong>：<a href="https://www.usenix.org/system/files/sec19fall_zhang_prepub.pdf" target="_blank" rel="noopener">https://www.usenix.org/system/files/sec19fall_zhang_prepub.pdf</a></p>
+<p>用户与Web应用交互主要通过点击事件，那么web中广告投放也不会放过拦截用户点击行为以获取利益。文章系统地研究了Web中的点击拦截实例，开发了一个基于浏览器的分析框架OBSERVER，用于收集和分析与点击相关的行为。文章作者使用OBSERVER，确定了三种不同的技术来拦截Alexa前250K网站上的用户点击，并检测到613个网站上437个截取用户点击的第三方脚本，这些网站平均每天可收到4300万次访问。通过拦截用户点击行为不仅是投放广告获利的手段之一，拦截用户点击行为还会让用户接触到诸如诈骗软件等恶意内容。</p>
+<h2 id="作者的工作："><a href="#作者的工作：" class="headerlink" title="作者的工作："></a>作者的工作：</h2><p>作者基于开源Web浏览器Chromium，开发了一个框架OBSERVER，该框架可以识别出web应用中点击劫持行为，用户在使用web应用时对此类恶意行为的重视。整篇文章作者对研究背景进行描述总结，详细阐述了关键技术方法、实现与评估，同时还有局限性思考和未来相关工作的总结。</p>
+<h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><p>点击HTML元素是用户与Web应用程序交互的主要方式。已知的用户劫持点击行为包括<strong>UI redressing attacks</strong>，还有利用<strong>bots to automatically and massively send fake click traffic</strong>，用来点击广告获取利益，当这些行为已不再有效时，攻击者就盯上了重定向用户的点击。例如，“浏览者重定向病毒” 将用户的默认搜索引擎修改为恶意搜索引擎，当用户点击搜索结果时将用户重定向到广告页面。恶意第三方iframe可以自动将用户重定向到广告页面，当脚本在点击时打开新tab时，用户的当tab可以自动重定向到非预期目标页。谷歌最近发布了新版Chrome浏览器，以阻止某些特定类型的自动重定向。尽管如此，Chrome仍然无法检测并阻止其他可能的方法来拦截用户点击，包括但不限于由第三方脚本修改的链接，伪装成第一方内容的第三方内容以及透明覆盖等恶意行为。</p>
+<h3 id="1-1-措施"><a href="#1-1-措施" class="headerlink" title="1.1 措施"></a>1.1 措施</h3><p>作者认为有必要对点击拦截进行系统研究，以深入了解这一新出现的网络用户威胁。因此开发一个系统，以自动检测Web上的此类实例，并研究哪些技术是被用来劫持用户点击以及发起这种行为的人。</p>
+<p>文章结构安排：首先设计和开发一个系统来检测JavaScript用来拦截用户点击的各种技术。然后，作者使用这个系统进行大规模测量，目的是找出那些劫持链接并欺骗用户点击的从业者。最后，作者分析测量结果，并探索隐藏在点击拦截实践背后的意图和后果。</p>
+<h3 id="1-2-挑战"><a href="#1-2-挑战" class="headerlink" title="1.2 挑战"></a>1.2 挑战</h3><p>由于Web应用程序的动态和事件驱动特性，执行上述系统研究具有挑战性。</p>
+<p>1，可以动态加载JS代码。只对HTML源代码静态分析是无法涵盖拦截用户点击的所有脚本。</p>
+<p>2，超链接可以由任何脚本动态创建和修改。为了确定一个脚本是否真正可以用于拦截，需要重新设计浏览器以区分不同脚本运行时的操作。</p>
+<p>3，JS可以通过事件侦听器（handlers）动态地将URL绑定到任意HTML元素。</p>
+<p>4，网页可能包含大量响应用户点击的事件处理程序。</p>
+<h3 id="1-3-应对"><a href="#1-3-应对" class="headerlink" title="1.3 应对"></a>1.3 应对</h3><p>通过四个步骤对一个网站的所有可能涉及到劫持点击行为的地方的相关属性进行记录。</p>
+<p>首先，在浏览器的渲染器中调解网页中JavaScript对超链接的所有访问。<br>通过这种方式可以识别与每个超链接关联的URL的发起者。</p>
+<p>其次，监视JavaScript对象的创建和执行，以便我们可以追踪动态内联JS代码。</p>
+<p>第三，监视所有在每个HTML元素上注册的事件处理程序以及与导航相关的JS API。</p>
+<p>最后，导出导航网址。</p>
+<h3 id="1-4-贡献"><a href="#1-4-贡献" class="headerlink" title="1.4 贡献"></a>1.4 贡献</h3><p>•作者设计和开发OBSERVER，一个研究点击拦截实践的框架。这有助于我们自动检测各种网站上的各种点击拦截案例。</p>
+<p>•作者进行了大规模测量研究，以探索和了解攻击者如何在实际环境中操纵网页拦截用户点击。 </p>
+<p>•作者描述了Alexa 前250K网站上点击拦截的活动，并发现了点击截取行为背后隐藏的意图和后果。</p>
+<h2 id="二、框架概要"><a href="#二、框架概要" class="headerlink" title="二、框架概要"></a>二、框架概要</h2><p>在本节中，我们首先概述了OBSERVER框架，旨在全面记录JS代码执行的所有潜在点击拦截相关事件。关注三类JS会使用的基本操作劫持用户点击行为：</p>
+<p>1）修改页面中的现有超链接; </p>
+<p>2）在页面中创建新的超链接; </p>
+<p>3）向HTML元素注册事件处理程序以挂钩用户点击。</p>
+<p>每当OBSERVER识别出任何此类操作时，它都会使用启动操作的脚本的唯一标识来标记相应的元素。 此外，OBSERVER记录在故意点击与页面中的事件处理程序相关联的超链接或元素之后的反应，以便知道点击拦截后引导用户去向哪个URL。</p>
+<h3 id="2-1-威胁模型"><a href="#2-1-威胁模型" class="headerlink" title="2.1 威胁模型"></a>2.1 威胁模型</h3><p>作者只考虑第三方JS脚本为恶意的，因为第一方对页面有完全的控制权。</p>
+<h3 id="2-2-记录对网页中所有超链接的任何访问"><a href="#2-2-记录对网页中所有超链接的任何访问" class="headerlink" title="2.2 记录对网页中所有超链接的任何访问"></a>2.2 记录对网页中所有超链接的任何访问</h3><p>在HTML中，使用锚元素（即，<code>&lt;a&gt;</code>标签）来定义超链接，并且其href属性值为目标URL。因此，通过监视和记录哪个脚本修改了<code>&lt;a&gt;</code>标签的href属性，OBSERVER能够识别脚本的潜在点击拦截。不论是直接使用原生JS修改href属性值还是利用JQ等第三方库修改，OBSERVER都可以识别到，因为这些方式仍然需要调用DOM标准中定义的上述API，这是由所有浏览器实现的，以确保跨浏览器的兼容性。具体方式是OBSERVER hook所有这些DOM API，以监视DOM中<code>&lt;a&gt;</code>标签的href属性的修改。它拦截对这些API的任何调用。截获后，它会检查当前的JS调用堆栈，再在调用堆栈中找到底部JS框架，以找到发起API调用的JS函数。</p>
+<h4 id="2-2-1-脚本识别"><a href="#2-2-1-脚本识别" class="headerlink" title="2.2.1 脚本识别"></a>2.2.1 脚本识别</h4><p>在上个步骤找到了发起API调用的JS函数后，要将该API调用归于特定脚本，需要获取访问JS代码的标识。 OBSERVER为每个脚本对象分配一个scriptID，以便在JS运行时唯一地标识它。</p>
+<p>在HTML中，JS代码常以三种方式引入：</p>
+<ul>
+<li>作为内联脚本包含在<script>和</script>标记之间。</li>
+<li>存储在外部JavaScript文件夹中，并作为外部脚本加载<script>标记。</li>
+<li>JavaScript代码可以作为事件监听器写入HTML元素。</li>
+</ul>
+<p>每个<code>&lt;script&gt;</code> 标签都编译为JavaScript引擎中的单个JavaScript对象。还有其他类型的内联JavaScript代码。例如，JavaScript代码可以作为事件监听器写入HTML元素的贡献。未包含在<br><code>&lt;script&gt;</code> 标签内的内联脚本也会编译为单独的JavaScript对象，这些对象由唯一的scriptID标识。</p>
+<p>OBSERVER将脚本的scriptID与其sourceURL相关联，sourceURL是浏览器用于加载远程JavaScript代码的URL。但内联脚本的sourceURL为空，那么就使用浏览器用于将HTML文档加载到嵌入框架中的URL作为静态内联脚本的sourceURL。对于通过JavaScript创建内联脚本的情况将在之后讨论。除了scriptID之外，我们还在与元素关联的shadow数据存储中记录函数的行号，列号和名称。值得注意的是，JavaScript代码无法修改shadow数据存储，因为它是一个在JavaScript端不可写的C++数据结构。</p>
+<h3 id="2-3-追踪动态元素创建"><a href="#2-3-追踪动态元素创建" class="headerlink" title="2.3 追踪动态元素创建"></a>2.3 追踪动态元素创建</h3><p>在网页中动态创建新的超链接是拦截用户点击的另一种方法。OBSERVER考虑了脚本可以实现此目标的直接和间接方法：1）创建超链接，2）创建 创建超链接的脚本。</p>
+<h4 id="2-3-1-直接方式–HTML锚元素"><a href="#2-3-1-直接方式–HTML锚元素" class="headerlink" title="2.3.1 直接方式–HTML锚元素"></a>2.3.1 直接方式–HTML锚元素</h4><p>JavaScript代码可以在网页中动态创建任何HTML元素，包括锚元素。</p>
+<p>具体来说，JavaScript可以通过多种API将新的<code>&lt;a&gt;</code>标签插入到网页的DOM树中。利用这些技术可以拦截用户点击。</p>
+<p>OBSERVER需要跟踪浏览器中<code>&lt;a&gt;</code>标签的动态创建。 OBSERVER将shadow initiator属性附加到DOM树中的每个锚元素，以表示对象的创建者。 initiator属性值是创建相应元素的脚本的scriptID。OBSERVER为浏览器解析器构建的所有静态元素分配一个特殊的initiator值O，它表示文档的所有者。静态<code>&lt;a&gt;</code>标签是第一方超链接。 OBSERVER拦截Web浏览器中的所有元素创建API，以便找到调用堆栈中的JavaScript框架。发起创建行为的脚本的scriptID用作动态创建的元素（超链接）的启动器。OBSERVER还会记录动态创建的锚元素的任何对href的访问。</p>
+<h4 id="2-3-2-间接方式–JS脚本"><a href="#2-3-2-间接方式–JS脚本" class="headerlink" title="2.3.2 间接方式–JS脚本"></a>2.3.2 间接方式–JS脚本</h4><p>JavaScript代码也可以在Web应用程序中动态生成，就像HTML元素一样。<code>&lt;script&gt;</code> 作为一个HTML元素类，可以由JavaScript动态创建。OBSERVER旨在为所有这些动态创建的脚本分配唯一标识。如果将外部脚本文件从远程主机加载到动态插入的 <code>&lt;script&gt;</code> 元素中，则获取其标识与获取一个静态 <code>&lt;script&gt;</code> 元素的sourceURL没有区别。</p>
+<p>但是，识别动态生成的内联脚本的标识并不简单，因为它的sourceURL是空白的。为了克服这种困难，OBSERVER hook用于生成动态脚本的API。它将调用脚本生成API的JavaScript代码的sourceURL保存为新生成的内联脚本的sourceURL。OBSERVER记录父脚本的scriptID作为子脚本的parentScriptID属性。最初由文档所有者静态嵌入的所有脚本的parentScriptID设置为O。OBSERVER还记录对任何DOM对象的任何内联事件处理程序的所有访问，它遍历所有脚本，将内联事件处理程序设置为其父脚本，并从中得到sourceURL。</p>
+<p>如果找不到这样的条目，OBSERVER会将创建接收者对象的脚本设置为其父脚本。</p>
+<h3 id="2-4-监控JavaScript事件监听器"><a href="#2-4-监控JavaScript事件监听器" class="headerlink" title="2.4 监控JavaScript事件监听器"></a>2.4 监控JavaScript事件监听器</h3><p>不需要修改或创建一个超链接，直接监听现有的HTML元素上的事件侦听器也能达到一样的效果。事件侦听器的作用是当用户点击已绑定侦听器的元素时，会触发该事件，事件处理程序则异步执行一些操作。也许是任意打开一个URL或者悄悄地发起某些请求。于是OBSERVE旨在监控这些事件侦听器看看是否会导航用户到不同的URL去。</p>
+<h3 id="2-5-视觉欺骗"><a href="#2-5-视觉欺骗" class="headerlink" title="2.5 视觉欺骗"></a>2.5 视觉欺骗</h3><p>作者确定了两种可能的视觉欺骗：模仿和透明叠加。<br>都是字面意思，模仿就是弄一个和真实网站中部分内容类似的，使用户不仔细看以为是正常的就去点击；透明叠加是将恶意内容覆盖到原本正常内容之上，修改透明度使用户不易察觉。</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t87zprgpj20kh0dc78f.jpg" alt=""></p>
+<p>例如左边黄色线框内，小字是sponsored，与上下红色框做得很像，诱使用户点击。<br>右边青色线框标记的全是第三方内容，由于覆盖在第一方内容之上，用户无论点哪都会触发第三方脚本预先设定好的点击事件。</p>
+<h3 id="2-6-部署"><a href="#2-6-部署" class="headerlink" title="2.6 部署"></a>2.6 部署</h3><p>Chromium browser (version 64.0.3282.186)</p>
+<h2 id="三、方法"><a href="#三、方法" class="headerlink" title="三、方法"></a>三、方法</h2><h3 id="3-1-数据集"><a href="#3-1-数据集" class="headerlink" title="3.1 数据集"></a>3.1 数据集</h3><p>Alexa前250K网站。有效网站为228,614个。</p>
+<p>两个步骤获取数据：1）在页面渲染后立即收集原始数据; 2）通过与渲染页面交互来收集反应数据。 首先OBSERVER等待最多45秒，是为了让浏览器完全呈现页面。</p>
+<p>之后，在页面中插入一个脚本以预先遍历DOM树，以收集OBSERVER已记录的每个元素的所有数据，还记录每个元素的几个显示属性（宽度，高度，位置，不透明度等），以研究可用于拦截用户点击的其他技巧（例如，某些第三方内容与之重叠或出现 类似于第一方内容）。</p>
+<p>然后，将当前DOM树的快照保存到外部HTML文件夹中。通过Selenium自动点击DOM树中的所有元素，触发click事件侦听器和超链接导航以收集导航日志。</p>
+<h3 id="3-2-第三方脚本检测"><a href="#3-2-第三方脚本检测" class="headerlink" title="3.2 第三方脚本检测"></a>3.2 第三方脚本检测</h3><p>由于作者认定第一方脚本具有高度完全的权力去操控任意元素，所以其行为不被认定为攻击，识别出第三方脚本就至关重要。主要通过判定该网站所属域以及加载的各个脚本所属域是否是同一组织或个人。该判断并不是100%准确的。</p>
+<h3 id="3-3-拦截检测"><a href="#3-3-拦截检测" class="headerlink" title="3.3 拦截检测"></a>3.3 拦截检测</h3><p>对三种方式（超链接、事件侦听器、视觉欺骗）进行拦截点击的方法第二节描述过。</p>
+<h3 id="3-4-逃避检测"><a href="#3-4-逃避检测" class="headerlink" title="3.4 逃避检测"></a>3.4 逃避检测</h3><p>一些第三方脚本有选择地拦截用户点击。通过限制拦截点击的速度，避免用户的怀疑。还有些脚本仅在用户第一次访问页面时才会在其事件处理程序中激活相关的代码。这可以通过在用户的浏览器中删除cookie来实现。</p>
+<h3 id="3-5-实验结果"><a href="#3-5-实验结果" class="headerlink" title="3.5 实验结果"></a>3.5 实验结果</h3><h4 id="3-5-1-第三方脚本识别"><a href="#3-5-1-第三方脚本识别" class="headerlink" title="3.5.1 第三方脚本识别"></a>3.5.1 第三方脚本识别</h4><p>三大类技术，分别是超链接、事件处理器、视觉欺骗。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t7p3c6iwj20je0ckgne.jpg" alt=""></p>
+<h4 id="3-5-2-第三方代码加载方式"><a href="#3-5-2-第三方代码加载方式" class="headerlink" title="3.5.2 第三方代码加载方式"></a>3.5.2 第三方代码加载方式</h4><p>从下表可以看出，由第一方脚本静态引入第三方脚本是最常用的方法。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t7r0n9jhj20jx06u3z8.jpg" alt=""></p>
+<h3 id="3-6-点击拦截缘由与影响"><a href="#3-6-点击拦截缘由与影响" class="headerlink" title="3.6 点击拦截缘由与影响"></a>3.6 点击拦截缘由与影响</h3><ol>
+<li>盈利，主要是广告与欺骗用户点击广告。</li>
+<li>传播恶意内容，自动下载恶意软件等。</li>
+</ol>
+<h2 id="四、讨论与将来工作"><a href="#四、讨论与将来工作" class="headerlink" title="四、讨论与将来工作"></a>四、讨论与将来工作</h2><p>作者从第三方脚本识别、检测范围（网站数量）、区分真实点击与自动化测试软件的模拟点击、生成安全警告与使浏览器自动执行一些策略来防止点击被拦截五个方面来讨论。</p>
+<p>第三方脚本识别问题作者是使用了域名作为判断依据，如何判断不同脚本来自同一个域比较复杂，感兴趣的可以看看原文。</p>
+<p>检测范围是Alexa前250K个网站的主页面，子页面没有检测。</p>
+<p>作者使用了selenium去驱动OBSERVE与网站进行交互，但是区分真实点击与这种自动化工具生成的模拟点击也是一个研究方向。</p>
+<p>已知存在这种安全威胁后，作者提出两点进行防御，一是生成安全警告让用户决定是否继续访问，二是安全策略确保链接与点击为整体，不会被任何第三方脚本修改。</p>
+<h2 id="五、思考"><a href="#五、思考" class="headerlink" title="五、思考"></a>五、思考</h2><p>从最后作者提出的几个待解决的问题来说，到目前为止没有很好的方法去解决，我们可以沿着这些思路继续研究下去。作者的工作量很大，涵盖的点击事件可能性全面，只是有些点击行为较为主观不好定义为是正常的还是恶意的。</p>
+</script></li></ul>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>herasu</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2019/08/09/Web中的点击拦截研究/" title="Web中的点击拦截研究">http://yoursite.com/2019/08/09/Web中的点击拦截研究/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web-security/" rel="tag"><i class="fa fa-tag"></i> web security</a>
+          
+            <a href="/tags/USENIX-2019/" rel="tag"><i class="fa fa-tag"></i> USENIX 2019</a>
+          
+            <a href="/tags/Click-Interception/" rel="tag"><i class="fa fa-tag"></i> Click Interception</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/12/踩坑小结3/" rel="next" title="踩坑小结3">
+                <i class="fa fa-chevron-left"></i> 踩坑小结3
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/night.jpg" alt="herasu">
+            
+              <p class="site-author-name" itemprop="name">herasu</p>
+              <p class="site-description motion-element" itemprop="description">Be kind</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">34</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/herasu" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:yusucq@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.whiterabbitxyj.com/" title="WhiteRabbit" target="_blank">WhiteRabbit</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://17307.github.io/" title="LittleHourY" target="_blank">LittleHourY</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Web中的点击拦截研究"><span class="nav-number">1.</span> <span class="nav-text">Web中的点击拦截研究</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作者的工作："><span class="nav-number">1.1.</span> <span class="nav-text">作者的工作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、引言"><span class="nav-number">1.2.</span> <span class="nav-text">一、引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-措施"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.1 措施</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-挑战"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2 挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-应对"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.3 应对</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-贡献"><span class="nav-number">1.2.4.</span> <span class="nav-text">1.4 贡献</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、框架概要"><span class="nav-number">1.3.</span> <span class="nav-text">二、框架概要</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-威胁模型"><span class="nav-number">1.3.1.</span> <span class="nav-text">2.1 威胁模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-记录对网页中所有超链接的任何访问"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.2 记录对网页中所有超链接的任何访问</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-脚本识别"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">2.2.1 脚本识别</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">herasu</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.3.0</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <!-- 页面点击小红心 --> 
+<script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
