@@ -357,7 +357,7 @@
                 
               
 
-              <time title="创建时间：2019-08-09 11:38:15 / 修改时间：11:36:48" itemprop="dateCreated datePublished" datetime="2019-08-09T11:38:15+08:00">2019-08-09</time>
+              <time title="创建时间：2019-08-09 11:38:15 / 修改时间：11:45:46" itemprop="dateCreated datePublished" datetime="2019-08-09T11:38:15+08:00">2019-08-09</time>
             
 
             
@@ -443,12 +443,10 @@
 <p>3）向HTML元素注册事件处理程序以挂钩用户点击。</p>
 <p>每当OBSERVER识别出任何此类操作时，它都会使用启动操作的脚本的唯一标识来标记相应的元素。 此外，OBSERVER记录在故意点击与页面中的事件处理程序相关联的超链接或元素之后的反应，以便知道点击拦截后引导用户去向哪个URL。</p>
 <h3 id="2-1-威胁模型"><a href="#2-1-威胁模型" class="headerlink" title="2.1 威胁模型"></a>2.1 威胁模型</h3><p>作者只考虑第三方JS脚本为恶意的，因为第一方对页面有完全的控制权。</p>
-<h3 id="2-2-记录对网页中所有超链接的任何访问"><a href="#2-2-记录对网页中所有超链接的任何访问" class="headerlink" title="2.2 记录对网页中所有超链接的任何访问"></a>2.2 记录对网页中所有超链接的任何访问</h3><p>在HTML中，使用锚元素（即，<code>&lt;a&gt;</code>标签）来定义超链接，并且其href属性值为目标URL。因此，通过监视和记录哪个脚本修改了<code>&lt;a&gt;</code>标签的href属性，OBSERVER能够识别脚本的潜在点击拦截。不论是直接使用原生JS修改href属性值还是利用JQ等第三方库修改，OBSERVER都可以识别到，因为这些方式仍然需要调用DOM标准中定义的上述API，这是由所有浏览器实现的，以确保跨浏览器的兼容性。具体方式是OBSERVER hook所有这些DOM API，以监视DOM中<code>&lt;a&gt;</code>标签的href属性的修改。它拦截对这些API的任何调用。截获后，它会检查当前的JS调用堆栈，再在调用堆栈中找到底部JS框架，以找到发起API调用的JS函数。</p>
-<h4 id="2-2-1-脚本识别"><a href="#2-2-1-脚本识别" class="headerlink" title="2.2.1 脚本识别"></a>2.2.1 脚本识别</h4><p>在上个步骤找到了发起API调用的JS函数后，要将该API调用归于特定脚本，需要获取访问JS代码的标识。 OBSERVER为每个脚本对象分配一个scriptID，以便在JS运行时唯一地标识它。</p>
-<p>在HTML中，JS代码常以三种方式引入：</p>
+<h3 id="2-2-记录对网页中所有超链接的任何访问"><a href="#2-2-记录对网页中所有超链接的任何访问" class="headerlink" title="2.2 记录对网页中所有超链接的任何访问"></a>2.2 记录对网页中所有超链接的任何访问</h3><p>在HTML中，使用锚元素（即，<figure class="highlight plain"><figcaption><span>hook所有这些DOM API，以监视DOM中```<a>```标签的href属性的修改。它拦截对这些API的任何调用。截获后，它会检查当前的JS调用堆栈，再在调用堆栈中找到底部JS框架，以找到发起API调用的JS函数。</a></span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">#### 2.2.1 脚本识别</span><br><span class="line"></span><br><span class="line">在上个步骤找到了发起API调用的JS函数后，要将该API调用归于特定脚本，需要获取访问JS代码的标识。 OBSERVER为每个脚本对象分配一个scriptID，以便在JS运行时唯一地标识它。</span><br><span class="line"></span><br><span class="line">在HTML中，JS代码常以三种方式引入：</span><br><span class="line"></span><br><span class="line">- 作为内联脚本包含在```&lt;script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>和<code>&lt;/script&gt;</code>标记之间。</p>
 <ul>
-<li>作为内联脚本包含在<script>和</script>标记之间。</li>
-<li>存储在外部JavaScript文件夹中，并作为外部脚本加载<script>标记。</li>
+<li>存储在外部JavaScript文件夹中，并作为外部脚本加载<code>&lt;script&gt;</code>标记。</li>
 <li>JavaScript代码可以作为事件监听器写入HTML元素。</li>
 </ul>
 <p>每个<code>&lt;script&gt;</code> 标签都编译为JavaScript引擎中的单个JavaScript对象。还有其他类型的内联JavaScript代码。例如，JavaScript代码可以作为事件监听器写入HTML元素的贡献。未包含在<br><code>&lt;script&gt;</code> 标签内的内联脚本也会编译为单独的JavaScript对象，这些对象由唯一的scriptID标识。</p>
@@ -462,7 +460,7 @@
 <p>如果找不到这样的条目，OBSERVER会将创建接收者对象的脚本设置为其父脚本。</p>
 <h3 id="2-4-监控JavaScript事件监听器"><a href="#2-4-监控JavaScript事件监听器" class="headerlink" title="2.4 监控JavaScript事件监听器"></a>2.4 监控JavaScript事件监听器</h3><p>不需要修改或创建一个超链接，直接监听现有的HTML元素上的事件侦听器也能达到一样的效果。事件侦听器的作用是当用户点击已绑定侦听器的元素时，会触发该事件，事件处理程序则异步执行一些操作。也许是任意打开一个URL或者悄悄地发起某些请求。于是OBSERVE旨在监控这些事件侦听器看看是否会导航用户到不同的URL去。</p>
 <h3 id="2-5-视觉欺骗"><a href="#2-5-视觉欺骗" class="headerlink" title="2.5 视觉欺骗"></a>2.5 视觉欺骗</h3><p>作者确定了两种可能的视觉欺骗：模仿和透明叠加。<br>都是字面意思，模仿就是弄一个和真实网站中部分内容类似的，使用户不仔细看以为是正常的就去点击；透明叠加是将恶意内容覆盖到原本正常内容之上，修改透明度使用户不易察觉。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t87zprgpj20kh0dc78f.jpg" alt=""></p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t87zprgpj20kh0dc78f.jpg" alt></p>
 <p>例如左边黄色线框内，小字是sponsored，与上下红色框做得很像，诱使用户点击。<br>右边青色线框标记的全是第三方内容，由于覆盖在第一方内容之上，用户无论点哪都会触发第三方脚本预先设定好的点击事件。</p>
 <h3 id="2-6-部署"><a href="#2-6-部署" class="headerlink" title="2.6 部署"></a>2.6 部署</h3><p>Chromium browser (version 64.0.3282.186)</p>
 <h2 id="三、方法"><a href="#三、方法" class="headerlink" title="三、方法"></a>三、方法</h2><h3 id="3-1-数据集"><a href="#3-1-数据集" class="headerlink" title="3.1 数据集"></a>3.1 数据集</h3><p>Alexa前250K网站。有效网站为228,614个。</p>
@@ -472,8 +470,8 @@
 <h3 id="3-2-第三方脚本检测"><a href="#3-2-第三方脚本检测" class="headerlink" title="3.2 第三方脚本检测"></a>3.2 第三方脚本检测</h3><p>由于作者认定第一方脚本具有高度完全的权力去操控任意元素，所以其行为不被认定为攻击，识别出第三方脚本就至关重要。主要通过判定该网站所属域以及加载的各个脚本所属域是否是同一组织或个人。该判断并不是100%准确的。</p>
 <h3 id="3-3-拦截检测"><a href="#3-3-拦截检测" class="headerlink" title="3.3 拦截检测"></a>3.3 拦截检测</h3><p>对三种方式（超链接、事件侦听器、视觉欺骗）进行拦截点击的方法第二节描述过。</p>
 <h3 id="3-4-逃避检测"><a href="#3-4-逃避检测" class="headerlink" title="3.4 逃避检测"></a>3.4 逃避检测</h3><p>一些第三方脚本有选择地拦截用户点击。通过限制拦截点击的速度，避免用户的怀疑。还有些脚本仅在用户第一次访问页面时才会在其事件处理程序中激活相关的代码。这可以通过在用户的浏览器中删除cookie来实现。</p>
-<h3 id="3-5-实验结果"><a href="#3-5-实验结果" class="headerlink" title="3.5 实验结果"></a>3.5 实验结果</h3><h4 id="3-5-1-第三方脚本识别"><a href="#3-5-1-第三方脚本识别" class="headerlink" title="3.5.1 第三方脚本识别"></a>3.5.1 第三方脚本识别</h4><p>三大类技术，分别是超链接、事件处理器、视觉欺骗。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t7p3c6iwj20je0ckgne.jpg" alt=""></p>
-<h4 id="3-5-2-第三方代码加载方式"><a href="#3-5-2-第三方代码加载方式" class="headerlink" title="3.5.2 第三方代码加载方式"></a>3.5.2 第三方代码加载方式</h4><p>从下表可以看出，由第一方脚本静态引入第三方脚本是最常用的方法。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t7r0n9jhj20jx06u3z8.jpg" alt=""></p>
+<h3 id="3-5-实验结果"><a href="#3-5-实验结果" class="headerlink" title="3.5 实验结果"></a>3.5 实验结果</h3><h4 id="3-5-1-第三方脚本识别"><a href="#3-5-1-第三方脚本识别" class="headerlink" title="3.5.1 第三方脚本识别"></a>3.5.1 第三方脚本识别</h4><p>三大类技术，分别是超链接、事件处理器、视觉欺骗。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t7p3c6iwj20je0ckgne.jpg" alt></p>
+<h4 id="3-5-2-第三方代码加载方式"><a href="#3-5-2-第三方代码加载方式" class="headerlink" title="3.5.2 第三方代码加载方式"></a>3.5.2 第三方代码加载方式</h4><p>从下表可以看出，由第一方脚本静态引入第三方脚本是最常用的方法。<br><img src="http://ww1.sinaimg.cn/large/720b6cbagy1g5t7r0n9jhj20jx06u3z8.jpg" alt></p>
 <h3 id="3-6-点击拦截缘由与影响"><a href="#3-6-点击拦截缘由与影响" class="headerlink" title="3.6 点击拦截缘由与影响"></a>3.6 点击拦截缘由与影响</h3><ol>
 <li>盈利，主要是广告与欺骗用户点击广告。</li>
 <li>传播恶意内容，自动下载恶意软件等。</li>
@@ -484,7 +482,7 @@
 <p>作者使用了selenium去驱动OBSERVE与网站进行交互，但是区分真实点击与这种自动化工具生成的模拟点击也是一个研究方向。</p>
 <p>已知存在这种安全威胁后，作者提出两点进行防御，一是生成安全警告让用户决定是否继续访问，二是安全策略确保链接与点击为整体，不会被任何第三方脚本修改。</p>
 <h2 id="五、思考"><a href="#五、思考" class="headerlink" title="五、思考"></a>五、思考</h2><p>从最后作者提出的几个待解决的问题来说，到目前为止没有很好的方法去解决，我们可以沿着这些思路继续研究下去。作者的工作量很大，涵盖的点击事件可能性全面，只是有些点击行为较为主观不好定义为是正常的还是恶意的。</p>
-</script></li></ul>
+
           
         
       
