@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-08-09T03:45:46.771Z</updated>
+  <updated>2019-09-05T03:58:29.062Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>系统win10控制面板-系统和安全-系统 加载页面失败</title>
+    <link href="http://yoursite.com/2019/09/05/%E7%B3%BB%E7%BB%9Fwin10%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF-%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%AE%89%E5%85%A8-%E7%B3%BB%E7%BB%9F%20%E5%8A%A0%E8%BD%BD%E9%A1%B5%E9%9D%A2%E5%A4%B1%E8%B4%A5/"/>
+    <id>http://yoursite.com/2019/09/05/系统win10控制面板-系统和安全-系统 加载页面失败/</id>
+    <published>2019-09-05T03:58:57.506Z</published>
+    <updated>2019-09-05T03:58:29.062Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>之前电脑突然没法正常使用打印机了，就重装打印机驱动，每次装到最后步骤了总是弹出安装失败，无法安装的，也给了错误代码，于是顺着这个代码找解决办法，先是查看关于打印的有个服务Print Spooler总是自己自动关闭了又自己启动，尽管已经设置为自动启动，各种重新启动还是有这个问题，然后又照着网上的<a href="https://www.techsupportall.com/print-spooler-is-not-running/" target="_blank" rel="noopener">各种方法</a>查看注册表删除文件夹什么都试过了，删掉设备中打印机和扫描仪再重新添加，依然没有效果。</p><p><img src="https://ws1.sinaimg.cn/large/720b6cbaly1g6oi2vfjq7j20j801w74c.jpg" alt="image"></p><p>原本默认就是自动启动的，但在当前页刷新每隔一段时间它就自己关闭了。</p><p><img src="https://ws1.sinaimg.cn/large/720b6cbaly1g6ohzw32fxj20gi0500t5.jpg" alt="image"></p><p>经过与小伙伴的注册表和Print Spooler服务属性对比，注册表没有不同，就是Print Spooler服务属性中的依存关系小伙伴有RPC</p><p><img src="https://ws1.sinaimg.cn/large/720b6cbaly1g6ohylxmkzj20di0gtn0h.jpg" alt="image"></p><p>我这是灰色的什么都没有，问题应该就出在这，然而不知道咋整，想着什么时候重装系统应该就好了（反正重装就完事了hhhhhh）。</p><h1 id="影响"><a href="#影响" class="headerlink" title="影响"></a>影响</h1><p>首先肯定是想打印个东西都需要别人帮忙，连带着有道云笔记中markdown通过打印转pdf也失效了，word中打印甚至打印机那里直接显示的是“未安装打印机”。</p><p><img src="https://ws1.sinaimg.cn/large/720b6cbaly1g6ohz50z41j20el0d1q37.jpg" alt="image"></p><p>其次我发现经过一顿胡乱操作后，文件系统还经常卡死，包括登录微信反应很久然后直接结束应用程序，非常不方便，强烈怀疑是连带问题。</p><h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>直到有一天！要添加个环境变量，结果打开系统加载不出，去找原因找到下面这篇 <a href="https://blog.csdn.net/sunshineddmmz/article/details/79506844" target="_blank" rel="noopener">博客</a> 和我遇到的情况一样，照着做了以后截成功了!<br>没想到的是，打印机也恢复如初，使用软件也不会动不动就结束应用程序了~</p><p><img src="https://ws1.sinaimg.cn/large/720b6cbaly1g6oi2k8yjmj20c20ckq3h.jpg" alt="image"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;起因&quot;&gt;&lt;a href=&quot;#起因&quot; class=&quot;headerlink&quot; title=&quot;起因&quot;&gt;&lt;/a&gt;起因&lt;/h1&gt;&lt;p&gt;之前电脑突然没法正常使用打印机了，就重装打印机驱动，每次装到最后步骤了总是弹出安装失败，无法安装的，也给了错误代码，于是顺着这个代码找解决办
+      
+    
+    </summary>
+    
+      <category term="日常踩坑" scheme="http://yoursite.com/categories/%E6%97%A5%E5%B8%B8%E8%B8%A9%E5%9D%91/"/>
+    
+    
+      <category term="系统加载页面失败" scheme="http://yoursite.com/tags/%E7%B3%BB%E7%BB%9F%E5%8A%A0%E8%BD%BD%E9%A1%B5%E9%9D%A2%E5%A4%B1%E8%B4%A5/"/>
+    
+      <category term="打印机无法安装" scheme="http://yoursite.com/tags/%E6%89%93%E5%8D%B0%E6%9C%BA%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85/"/>
+    
+  </entry>
   
   <entry>
     <title>Web中的点击拦截研究</title>
@@ -257,9 +284,9 @@
       <category term="前端" scheme="http://yoursite.com/categories/%E5%89%8D%E7%AB%AF/"/>
     
     
-      <category term="summary" scheme="http://yoursite.com/tags/summary/"/>
-    
       <category term="JS" scheme="http://yoursite.com/tags/JS/"/>
+    
+      <category term="summary" scheme="http://yoursite.com/tags/summary/"/>
     
   </entry>
   
@@ -286,9 +313,9 @@
     
       <category term="CSS" scheme="http://yoursite.com/tags/CSS/"/>
     
-      <category term="pseudo-element" scheme="http://yoursite.com/tags/pseudo-element/"/>
-    
       <category term="summary" scheme="http://yoursite.com/tags/summary/"/>
+    
+      <category term="pseudo-element" scheme="http://yoursite.com/tags/pseudo-element/"/>
     
   </entry>
   

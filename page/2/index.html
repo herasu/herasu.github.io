@@ -311,6 +311,208 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/28/踩坑小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="herasu">
+      <meta itemprop="description" content="Be kind">
+      <meta itemprop="image" content="/images/night.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fish">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/02/28/踩坑小结/" itemprop="url">
+                  踩坑小结
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-28 21:04:48 / 修改时间：21:04:40" itemprop="dateCreated datePublished" datetime="2019-02-28T21:04:48+08:00">2019-02-28</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近实践开发中遇到一些小的问题，踩了不少坑，记录下来方便之后避免重复踩坑。</p>
+<h1 id="vue兼容IE"><a href="#vue兼容IE" class="headerlink" title="vue兼容IE"></a>vue兼容IE</h1><blockquote>
+<p>Vue 不支持 IE8 及以下版本，因为 Vue 使用了 IE8 无法模拟的 ECMAScript 5 特性。但它支持所有兼容 ECMAScript 5 的浏览器。</p>
+</blockquote>
+<h2 id="no-cli-webpack"><a href="#no-cli-webpack" class="headerlink" title="no cli/webpack"></a>no cli/webpack</h2><p>一开始没有使用vue-cli，只是单个的HTML文件，毕竟在Chrome下调试没有考虑到要兼容IE，对于非cli开发的暂时也没想到办法，试过直接引入babel-polyfill的cdn或是直接引入本地babel-polyfill也不行。后来考虑到用了ES6语法,而IE不支持ES6的特性。想到将ES6语法转换成ES5。</p>
+<blockquote>
+<p>Babel默认只转换新的JavaScript句法（syntax），而不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。</p>
+</blockquote>
+<p>保险起见，使用browser.js（可转换不包含Promise等新的API的语法）与polyfill.js（确保API也能正常）。根据<a href="https://www.kancloud.cn/digest/babel/217110" target="_blank" rel="noopener">babel相关教程</a>进行修改，别忘记设置script里type=”text/babel”，解决了部分问题，比如在IE下页面显示部分，但还是没有显示全。注意ES6是强制strict模式的，遇到报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SCRIPT1046: strict 模式下不允许一个属性有多个定义</span><br></pre></td></tr></table></figure>
+<p>由于用了elementUI，里面有一些重复的属性，从功能上考虑还是不删更好。<br>折腾半天还是不行，就转向了cli下。如果有小伙伴解决了这个问题欢迎分享。</p>
+<h2 id="cli"><a href="#cli" class="headerlink" title="cli"></a>cli</h2><p>在cli下开发就容易多了，按照网上查找的方法成功解决问题，记得npm装一下babel-polyfill</p>
+<p>接着在build文件夹下的webpack.base.conf.js文件中修改entry，添加babel-polyfill</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line">    context: path.resolve(__dirname, &apos;../&apos;),</span><br><span class="line">    entry: &#123;</span><br><span class="line">        app: &apos;./src/main.js&apos;, //将这行注释掉</span><br><span class="line">        app: [&quot;babel-polyfill&quot;, &quot;./src/main.js&quot;], //添加这行</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>然后在src文件夹下的main.js入口文件中引入 babel-polyfill</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &quot;babel-polyfill&quot;</span><br></pre></td></tr></table></figure>
+<p>此时测试在IE下打开效果，同时也让小伙伴帮忙测试，同样两个人都是IE11结果却是一个能打开一个打开一片空白。结果发现能正常访问其IE浏览器默认显示版本为IE8以上，不能正常访问的用户，其IE浏览器默认显示版本都在IE8以下。不能正常显示的IE浏览器默认选用的显示版本却是IE8及以下，如下图所示：</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbaly1g0m8eapcdej207207ldfn.jpg" alt></p>
+<p>那么解决该问题的方法就是让IE浏览器的显示版本都要大于8，具体解决方法如下：</p>
+<p>在项目的index.html文件的head中加入以下meta语句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=Edge&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这句话的意思就是告诉IE浏览器，IE8以上的版本都以最高版本来渲染页面。</p>
+<p><img src="http://ww1.sinaimg.cn/large/720b6cbaly1g0m8ehfcy1j207f07pweb.jpg" alt></p>
+<hr>
+<h1 id="vue中数据修改"><a href="#vue中数据修改" class="headerlink" title="vue中数据修改"></a>vue中数据修改</h1><p>vue里面的v-model是双向绑定，修改对象A的时候，引用该数据的地方也会随之更改，为了避免原对象A被修改，想用一个中间变量过渡一下，所以命名一个新的对象B，对象B和原始的对象A是一样的内容，只是名字不一样，<em>this.A=this.B</em>，但是赋值之后发现，修改中间对象B的属性值，原始对象A也会更改，原来是vue的对象赋值，没有进行深层赋值，只是把this.A的地址指向了与this.B相同的地址，所有对于A的修改会影响到B。解决相互影响的思路是在this.A必须是新建的一个对象，这样才能保证不被指向同一地址，属性修改不会相互影响。解决方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.A=JSON.parse(JSON.stringify(this.B));</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="vue中渲染闪烁问题"><a href="#vue中渲染闪烁问题" class="headerlink" title="vue中渲染闪烁问题"></a>vue中渲染闪烁问题</h1><ul>
+<li>使用了，一闪而过的双花括号，解决方案使用v-bind</li>
+<li>使用了v-if/v-show，本应隐藏的元素先显示再隐藏的问题，造成了闪烁，解决办法在v-if所在元素中加上v-cloak</li>
+</ul>
+<p>在CSS中定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[v-cloak]&#123;</span><br><span class="line">    display:none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="vue打包静态资源路径问题"><a href="#vue打包静态资源路径问题" class="headerlink" title="vue打包静态资源路径问题"></a>vue打包静态资源路径问题</h1><ol>
+<li>config文件夹下下index.js中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">build: &#123;</span><br><span class="line">    ...</span><br><span class="line">    // Paths</span><br><span class="line">    assetsRoot: path.resolve(__dirname, &apos;../dist&apos;),</span><br><span class="line">    assetsSubDirectory: &apos;static&apos;,</span><br><span class="line">    assetsPublicPath: &apos;./&apos;,   //加一个&quot;.&quot;</span><br><span class="line">    ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>若使用了iconfonts等库，还要在build文件夹下的utils.js中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (options.extract) &#123;</span><br><span class="line">      return ExtractTextPlugin.extract(&#123;</span><br><span class="line">        use: loaders,</span><br><span class="line">        fallback: &apos;vue-style-loader&apos;,</span><br><span class="line">        publicPath: &quot;../../&quot;    //添加这一行</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="echarts关系图实例数据"><a href="#echarts关系图实例数据" class="headerlink" title="echarts关系图实例数据"></a>echarts关系图实例数据</h1><p>查看官方实例的时候，觉得这个<a href="https://www.echartsjs.com/examples/editor.html?c=graph-circular-layout" target="_blank" rel="noopener">关系图</a>很酷，想查看其数据格式，直接扒下来的是一个.gexf文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$.get(&apos;data/asset/data/les-miserables.gexf&apos;, function (xml) &#123;</span><br><span class="line">    var graph = echarts.dataTool.gexf.parse(xml);</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>在本地依次引入了jQuery、echarts，结果dataTool在这呢<br><a href="https://github.com/apache/incubator-echarts/blob/master/dist/extension/dataTool.min.js" target="_blank" rel="noopener">https://github.com/apache/incubator-echarts/blob/master/dist/extension/dataTool.min.js</a></p>
+<p>其实也不用那么麻烦，照样可以拿到解析后的json数据。首先在原实例里添加 <strong>console.log(graph)</strong> 再运行。打开控制台里复制数据，右键打印出的数据，<em>store as global variable</em>，再在控制台里输入 <strong>copy(temp1)</strong> ，就可以在编辑器里粘贴了！</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/13/圣杯布局与双飞翼布局小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1173,209 +1375,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/30/ubuntu14.04误删管理员账户or忘记密码的解决方法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="herasu">
-      <meta itemprop="description" content="Be kind">
-      <meta itemprop="image" content="/images/night.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fish">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/30/ubuntu14.04误删管理员账户or忘记密码的解决方法/" itemprop="url">
-                  ubuntu误删(锁)管理员账户/忘记密码的解决方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-07-30 21:24:00 / 修改时间：21:23:50" itemprop="dateCreated datePublished" datetime="2018-07-30T21:24:00+08:00">2018-07-30</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/教程/" itemprop="url" rel="index"><span itemprop="name">教程</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="ubuntu14-6-04误删-锁-管理员账户-忘记密码的解决方法"><a href="#ubuntu14-6-04误删-锁-管理员账户-忘记密码的解决方法" class="headerlink" title="ubuntu14/6.04误删(锁)管理员账户/忘记密码的解决方法"></a>ubuntu14/6.04误删(锁)管理员账户/忘记密码的解决方法</h1><p><strong>原文链接</strong>：<a href="https://wenku.baidu.com/view/4a80f931b52acfc789ebc97c" target="_blank" rel="noopener">https://wenku.baidu.com/view/4a80f931b52acfc789ebc97c</a></p>
-<p>几个月前没事手贱误把管理员账户给锁了，由于里面有重要的文件，就查找网上的办法，试了很多方法也没法进去，密码是记得的，但是密码无效……试了很多方法无效，最终下面的方法成功解决，转发以做个记录，万一以后又遇到了呢????原文是13.04，几个月前我用的14.04，事实证明16.04也适用。</p>
-<p>首先介绍下我是如何作死的，看官方文档的时候觉得有意思就想试试，毕竟下面有解锁，然而一锁上就没法解了</p>
-<p><img src="http://ww1.sinaimg.cn/mw690/720b6cbaly1fts5jqym1vj208p04n0sn.jpg" alt></p>
-<p>等到再次开机时，输入密码已经没用了，无效，密码肯定是没错，毕竟密码就123456你说我还能记错吗，可以看到输入框后面有个警示符</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbaly1fts6yrjiljj20dv0afq59.jpg" alt></p>
-<p>好了，接下来就是解锁过程了！</p>
-<p>开机，长按shift进入（虚拟机按esc），选择第二个选项，进入高级选项<strong>(Advanced)</strong>：</p>
-<p> <img src="http://ww1.sinaimg.cn/large/720b6cbaly1fts6cv05bjj20hr0bm748.jpg" alt></p>
-<p>再进入恢复模式<strong>(recovery mode)</strong>，接着把光标移动到<strong>root</strong>上，回车</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbaly1fts6er9zf2j20ii09ujre.jpg" alt></p>
-<p>输入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd uesrname    //username替换为你的用户名</span><br></pre></td></tr></table></figure>
-<p>提示错误信息：<br><em>Authentication token manipulation error</em></p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbaly1fts6raqpssj20cy0360sk.jpg" alt></p>
-<ol>
-<li>分区没有空间导致，<br>解决办法是用df查看根分区，如果满的话，删除不要的文件。</li>
-<li>/etc/passwd 和/etc/shadow不同步。</li>
-</ol>
-<ul>
-<li>解决办法直接输入命令<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pwconv</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>回车，结果出现错误提示信息：<em>pwconv cannot lock /etc/passwd;try again later</em></p>
-<p>意思是passwd被锁定了，稍后再试。</p>
-<ul>
-<li>出现以上信息后，得想办法啊。稍后再试，我稍后试了好几回，都没成功。看来得另外想办法。来命令，给passwd文件加权限：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chomd 777 /etc/passwd</span><br></pre></td></tr></table></figure>
-<p>结果又出提示错误信息：<br><em>chmod：changing permissions of ‘/etc/passwd’; Read-only file system</em></p>
-<ul>
-<li>又找新的方法，解决这个问题，分别输入以下两行命令后</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 666 /dev/null</span><br><span class="line">mount -o remount,rw /</span><br></pre></td></tr></table></figure>
-<p>再输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 /etc/passwd</span><br></pre></td></tr></table></figure></p>
-<p>这下没提示错误了。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbaly1fts73bocnej20b2028t8i.jpg" alt></p>
-<p>接下来</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll /etc/passwd      //查看文件权限</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pwconv       //同步/etc/passwd和/etc/shadow两个文件</span><br></pre></td></tr></table></figure>
-<p>这下成功了，没提示错误。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd username     //重新设置你的用户名username的密码</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbaly1fts6qsqqlvj20em03zglh.jpg" alt></p>
-<p>再接着输入两次相同的密码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot     //重新启动系统。</span><br></pre></td></tr></table></figure>
-<p>原文还有一种方法没有试过，网上给的大多数方法只到第一步输入用户名和新密码后就显示修改成功，然而我跟这位遇到的情况一样很多错误提示，为此记录下来备用。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1425,7 +1424,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1446,7 +1445,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -1527,7 +1528,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">34</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">36</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
