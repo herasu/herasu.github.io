@@ -144,6 +144,16 @@
 
 
 
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5b5272a6278c6164e292cdb8320bce50";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
 
 
 
@@ -415,53 +425,23 @@
       
         
           
-            <p>最近实践开发中遇到一些小的问题，踩了不少坑，记录下来方便之后避免重复踩坑。</p>
-<h1 id="vue兼容IE"><a href="#vue兼容IE" class="headerlink" title="vue兼容IE"></a>vue兼容IE</h1><blockquote>
-<p>Vue 不支持 IE8 及以下版本，因为 Vue 使用了 IE8 无法模拟的 ECMAScript 5 特性。但它支持所有兼容 ECMAScript 5 的浏览器。</p>
-</blockquote>
-<h2 id="no-cli-webpack"><a href="#no-cli-webpack" class="headerlink" title="no cli/webpack"></a>no cli/webpack</h2><p>一开始没有使用vue-cli，只是单个的HTML文件，毕竟在Chrome下调试没有考虑到要兼容IE，对于非cli开发的暂时也没想到办法，试过直接引入babel-polyfill的cdn或是直接引入本地babel-polyfill也不行。后来考虑到用了ES6语法,而IE不支持ES6的特性。想到将ES6语法转换成ES5。</p>
-<blockquote>
-<p>Babel默认只转换新的JavaScript句法（syntax），而不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。</p>
-</blockquote>
-<p>保险起见，使用browser.js（可转换不包含Promise等新的API的语法）与polyfill.js（确保API也能正常）。根据<a href="https://www.kancloud.cn/digest/babel/217110" target="_blank" rel="noopener">babel相关教程</a>进行修改，别忘记设置script里type=”text/babel”，解决了部分问题，比如在IE下页面显示部分，但还是没有显示全。注意ES6是强制strict模式的，遇到报错</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SCRIPT1046: strict 模式下不允许一个属性有多个定义</span><br></pre></td></tr></table></figure>
-<p>由于用了elementUI，里面有一些重复的属性，从功能上考虑还是不删更好。<br>折腾半天还是不行，就转向了cli下。如果有小伙伴解决了这个问题欢迎分享。</p>
-<h2 id="cli"><a href="#cli" class="headerlink" title="cli"></a>cli</h2><p>在cli下开发就容易多了，按照网上查找的方法成功解决问题，记得npm装一下babel-polyfill</p>
-<p>接着在build文件夹下的webpack.base.conf.js文件中修改entry，添加babel-polyfill</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line">    context: path.resolve(__dirname, &apos;../&apos;),</span><br><span class="line">    entry: &#123;</span><br><span class="line">        app: &apos;./src/main.js&apos;, //将这行注释掉</span><br><span class="line">        app: [&quot;babel-polyfill&quot;, &quot;./src/main.js&quot;], //添加这行</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
-<p>然后在src文件夹下的main.js入口文件中引入 babel-polyfill</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &quot;babel-polyfill&quot;</span><br></pre></td></tr></table></figure>
-<p>此时测试在IE下打开效果，同时也让小伙伴帮忙测试，同样两个人都是IE11结果却是一个能打开一个打开一片空白。结果发现能正常访问其IE浏览器默认显示版本为IE8以上，不能正常访问的用户，其IE浏览器默认显示版本都在IE8以下。不能正常显示的IE浏览器默认选用的显示版本却是IE8及以下，如下图所示：</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbaly1g0m8eapcdej207207ldfn.jpg" alt></p>
-<p>那么解决该问题的方法就是让IE浏览器的显示版本都要大于8，具体解决方法如下：</p>
-<p>在项目的index.html文件的head中加入以下meta语句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=Edge&quot;&gt;</span><br></pre></td></tr></table></figure></p>
-<p>这句话的意思就是告诉IE浏览器，IE8以上的版本都以最高版本来渲染页面。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbaly1g0m8ehfcy1j207f07pweb.jpg" alt></p>
-<hr>
-<h1 id="vue中数据修改"><a href="#vue中数据修改" class="headerlink" title="vue中数据修改"></a>vue中数据修改</h1><p>vue里面的v-model是双向绑定，修改对象A的时候，引用该数据的地方也会随之更改，为了避免原对象A被修改，想用一个中间变量过渡一下，所以命名一个新的对象B，对象B和原始的对象A是一样的内容，只是名字不一样，<em>this.A=this.B</em>，但是赋值之后发现，修改中间对象B的属性值，原始对象A也会更改，原来是vue的对象赋值，没有进行深层赋值，只是把this.A的地址指向了与this.B相同的地址，所有对于A的修改会影响到B。解决相互影响的思路是在this.A必须是新建的一个对象，这样才能保证不被指向同一地址，属性修改不会相互影响。解决方式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.A=JSON.parse(JSON.stringify(this.B));</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="vue中渲染闪烁问题"><a href="#vue中渲染闪烁问题" class="headerlink" title="vue中渲染闪烁问题"></a>vue中渲染闪烁问题</h1><ul>
-<li>使用了，一闪而过的双花括号，解决方案使用v-bind</li>
-<li>使用了v-if/v-show，本应隐藏的元素先显示再隐藏的问题，造成了闪烁，解决办法在v-if所在元素中加上v-cloak</li>
-</ul>
-<p>在CSS中定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[v-cloak]&#123;</span><br><span class="line">    display:none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<hr>
-<h1 id="vue打包静态资源路径问题"><a href="#vue打包静态资源路径问题" class="headerlink" title="vue打包静态资源路径问题"></a>vue打包静态资源路径问题</h1><ol>
-<li>config文件夹下下index.js中</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">build: &#123;</span><br><span class="line">    ...</span><br><span class="line">    // Paths</span><br><span class="line">    assetsRoot: path.resolve(__dirname, &apos;../dist&apos;),</span><br><span class="line">    assetsSubDirectory: &apos;static&apos;,</span><br><span class="line">    assetsPublicPath: &apos;./&apos;,   //加一个&quot;.&quot;</span><br><span class="line">    ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>若使用了iconfonts等库，还要在build文件夹下的utils.js中</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (options.extract) &#123;</span><br><span class="line">      return ExtractTextPlugin.extract(&#123;</span><br><span class="line">        use: loaders,</span><br><span class="line">        fallback: &apos;vue-style-loader&apos;,</span><br><span class="line">        publicPath: &quot;../../&quot;    //添加这一行</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="echarts关系图实例数据"><a href="#echarts关系图实例数据" class="headerlink" title="echarts关系图实例数据"></a>echarts关系图实例数据</h1><p>查看官方实例的时候，觉得这个<a href="https://www.echartsjs.com/examples/editor.html?c=graph-circular-layout" target="_blank" rel="noopener">关系图</a>很酷，想查看其数据格式，直接扒下来的是一个.gexf文件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$.get(&apos;data/asset/data/les-miserables.gexf&apos;, function (xml) &#123;</span><br><span class="line">    var graph = echarts.dataTool.gexf.parse(xml);</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
-<p>在本地依次引入了jQuery、echarts，结果dataTool在这呢<br><a href="https://github.com/apache/incubator-echarts/blob/master/dist/extension/dataTool.min.js" target="_blank" rel="noopener">https://github.com/apache/incubator-echarts/blob/master/dist/extension/dataTool.min.js</a></p>
-<p>其实也不用那么麻烦，照样可以拿到解析后的json数据。首先在原实例里添加 <strong>console.log(graph)</strong> 再运行。打开控制台里复制数据，右键打印出的数据，<em>store as global variable</em>，再在控制台里输入 <strong>copy(temp1)</strong> ，就可以在编辑器里粘贴了！</p>
+          最近实践开发中遇到一些小的问题，踩了不少坑，记录下来方便之后避免重复踩坑。
+vue兼容IE
+Vue 不支持 IE8 及以下版本，因为 Vue 使用了 IE8 无法模拟的 ECMAScript 5 特性。但它支持所有兼容 ECMAScript 5 的浏览器。
 
-          
+no cli/webpack一开始没有使用vue-cli，只是单个的HTML文件，毕竟在Chrome下调试没有考虑到要兼容IE，对于非cli开发的暂时也没想到办法，试过直接引入babel-polyfill的cdn或是直接引入本地babel-polyfill也不行。后来考虑到用了ES6语法,而IE不支持ES6的特性。想到将ES6语法转换成ES5。
+
+Babel默认只转换新的JavaScript句法（syntax），而不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。
+
+保险起见，使用b
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/02/28/踩坑小结/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -617,70 +597,23 @@
       
         
           
-            <p>在学习CSS布局中，三栏布局中的圣杯布局和双飞翼布局应用很广泛，并不是说完成左右宽度固定中间宽度自适应这类布局的时候一定要用这两个布局的原理去实现，实现同一个布局的方法很多，我们应该根据需求去选择。</p>
-<p>不论是圣杯布局还是双飞翼布局其HTML的DOM结构都是按照中间—左侧—右侧的顺序，相应地也是按这个顺序进行加载，也就是我们常说的“重要的内容先加载”。</p>
-<h1 id="圣杯布局"><a href="#圣杯布局" class="headerlink" title="圣杯布局"></a>圣杯布局</h1><h2 id="STEP-1-CREATE-THE-FRAME"><a href="#STEP-1-CREATE-THE-FRAME" class="headerlink" title="STEP 1: CREATE THE FRAME"></a>STEP 1: CREATE THE FRAME</h2><p>先写好整体框架</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;header&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;container&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;footer&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>用希望左右列占据的宽度作为内边距填充容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#container &#123;</span><br><span class="line">  padding-left: 200px;   /* 左列宽度 */</span><br><span class="line">  padding-right: 150px;  /* 右列宽度 */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dsakfdcj20f009q74c.jpg" alt></p>
-<h2 id="STEP-2-ADD-THE-COLUMNS"><a href="#STEP-2-ADD-THE-COLUMNS" class="headerlink" title="STEP 2: ADD THE COLUMNS"></a>STEP 2: ADD THE COLUMNS</h2><p>加入具体的左中右三列，注意中间要放在前面</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;header&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;container&quot;&gt;</span><br><span class="line">  &lt;div id=&quot;center&quot; class=&quot;column&quot;&gt;&lt;/div&gt;</span><br><span class="line">  &lt;div id=&quot;left&quot; class=&quot;column&quot;&gt;&lt;/div&gt;</span><br><span class="line">  &lt;div id=&quot;right&quot; class=&quot;column&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;footer&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>接着相应的CSS</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#container .column &#123;</span><br><span class="line">  float: left;</span><br><span class="line">&#125;</span><br><span class="line">#center &#123;</span><br><span class="line">  width: 100%;  /*指的是除了padding的container的div宽度*/</span><br><span class="line">&#125;</span><br><span class="line">#left &#123;</span><br><span class="line">  width: 200px;</span><br><span class="line">&#125;</span><br><span class="line">#right &#123;</span><br><span class="line">  width: 150px; </span><br><span class="line">&#125;</span><br><span class="line">#footer &#123;</span><br><span class="line">  clear: both;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>由于中间列宽度是100%，所以左列和右列被挤到下面了</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dstgtsdj20f009q0st.jpg" alt></p>
-<h2 id="STEP-3-PULL-THE-LEFT-COLUMN-INTO-PLACE"><a href="#STEP-3-PULL-THE-LEFT-COLUMN-INTO-PLACE" class="headerlink" title="STEP 3: PULL THE LEFT COLUMN INTO PLACE"></a>STEP 3: PULL THE LEFT COLUMN INTO PLACE</h2><p>现在需要将左右两列给弄到上面中间列左右空出来的padding的位置去</p>
-<p>中间列已经在它该在的位置了，所以先不处理它</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#left &#123;</span><br><span class="line">  width: 200px;</span><br><span class="line">  margin-left: -100%;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dugbt3ug20f009qt8l.gif" alt></p>
-<p>这里用100%的负边距将左列移到中间列的最左侧，这100%表示的是container这个div的宽度，也相当于中间列的宽度。现在左列已经上去了，但没有去到该去的位置（padding-left:200px)，这时用到了定位position，right:200px这条CSS将左列往左推了200px,也就是它自己的宽度</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#container .columns &#123;</span><br><span class="line">  float: left;</span><br><span class="line">  position: relative;</span><br><span class="line">&#125;</span><br><span class="line">#left &#123;</span><br><span class="line">  width: 200px;</span><br><span class="line">  margin-left: -100%;</span><br><span class="line">  right: 200px;        /* 自身宽度 */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dtbaicbj20f009qq2y.jpg" alt></p>
-<h2 id="STEP-4-PULL-THE-RIGHT-COLUMN-INTO-PLACE"><a href="#STEP-4-PULL-THE-RIGHT-COLUMN-INTO-PLACE" class="headerlink" title="STEP 4: PULL THE RIGHT COLUMN INTO PLACE"></a>STEP 4: PULL THE RIGHT COLUMN INTO PLACE</h2><p>由于左侧列离开了原来的位置，右列就会自然而然的流过去占据以前左列的位置，那现在怎么把右侧移到它该去的位置呢？（预留的padding-right：150px）同样使用负边距</p>
-<ul>
-<li>方法一：与操作左列一样， margin-left: -100%后会到中间列的最左侧，此时利用定位将右列向右推倒最右边，设置为left:100%，这100%表示中间列的宽度</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#right &#123;</span><br><span class="line">   width: 150px;</span><br><span class="line">   margin-left: -100%;</span><br><span class="line">   left:100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>方法二：使用margin-right，设置为-150px,即右列的宽度；或者设置为-100%，这里100%还是指的container这个div的宽度，也就是中间列的宽度。事实上只要外边距的绝对值大于其自身的宽度即150px均能达到这个效果。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#right &#123;</span><br><span class="line">  width: 150px;</span><br><span class="line">  margin-right: -150px;  /* 自身宽度 */</span><br><span class="line">  //margin-right: -100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>到此就将它们的位置放对了。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dv37qujj20f009qmx5.jpg" alt></p>
-<h2 id="STEP-5-DESIGN-DEFENSIVELY"><a href="#STEP-5-DESIGN-DEFENSIVELY" class="headerlink" title="STEP 5: DESIGN DEFENSIVELY"></a>STEP 5: DESIGN DEFENSIVELY</h2><p>如果浏览器窗口缩小，中间列宽度小于左列的话，这个布局在标准浏览器中会垮掉，因此有必要设定一个最小宽度</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">  min-width: 550px;  /* 2倍左列宽度+右列宽度 */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="STEP-6-EQUAL-HEIGHT-COLUMNS"><a href="#STEP-6-EQUAL-HEIGHT-COLUMNS" class="headerlink" title="STEP 6: EQUAL-HEIGHT COLUMNS"></a>STEP 6: EQUAL-HEIGHT COLUMNS</h2><p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dv7awkcj21gv0p677d.jpg" alt></p>
-<p>此时很容易出现三列不等高的情况，这个问题容易解决，常用的方法是利用内边距比负外边距绝对值大一点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#container .column &#123;</span><br><span class="line">  padding-bottom: 20010px; </span><br><span class="line">  margin-bottom: -20000px;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>为防止溢出，为外层div添加上</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#container &#123;</span><br><span class="line">	padding-left: 200px;    /* 左列宽度 */</span><br><span class="line">	padding-right: 150px;  /* 右列宽度 */</span><br><span class="line">	overflow: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>实际上当container内容区没有浏览器窗口大的时候页脚也会出现一部分空白，所以在这种情况下若需要页脚们可以讲内容区设置固定高度后再添加页脚</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5dz8ze6oj21h90qcjva.jpg" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#container .column &#123;</span><br><span class="line">	height: 1200px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="双飞翼布局"><a href="#双飞翼布局" class="headerlink" title="双飞翼布局"></a>双飞翼布局</h1><p>双飞翼这个布局来源于淘宝的页面布局，是源于对页面的形象表达。</p>
-<h2 id="第一步-确定结构"><a href="#第一步-确定结构" class="headerlink" title="第一步 确定结构"></a>第一步 确定结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">　　&lt;div class=&quot;center&quot;&gt;中间&lt;/div&gt;</span><br><span class="line">　　&lt;div class=&quot;left&quot;&gt;左&lt;/div&gt;</span><br><span class="line">　　&lt;div class=&quot;right&quot;&gt;右&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>现在的问题是在不改变DOM结构的情况下如何让center展示在中间呢</p>
-<h2 id="第二步-基本CSS"><a href="#第二步-基本CSS" class="headerlink" title="第二步 基本CSS"></a>第二步 基本CSS</h2><p>这时CSS就要发挥其作用了，将container容器定义一个100%的宽度，对其中每个部分，中左右都设置为浮动，这跟圣杯布局中是一样的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">.container&#123; </span><br><span class="line">    width:100%;</span><br><span class="line">&#125;</span><br><span class="line">.center &#123; </span><br><span class="line">    float:left; </span><br><span class="line">    width:100%; </span><br><span class="line">&#125;</span><br><span class="line">.left &#123; </span><br><span class="line">    float:left; </span><br><span class="line">    width:200px;</span><br><span class="line">&#125;</span><br><span class="line">.right &#123; </span><br><span class="line">    float:left; </span><br><span class="line">    width:150px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>此时中间占据了整个宽度，左右两侧自然也被挤下去了。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5e8qq4ltj21h00igwer.jpg" alt></p>
-<h2 id="第三步-确定各列正确位置"><a href="#第三步-确定各列正确位置" class="headerlink" title="第三步 确定各列正确位置"></a>第三步 确定各列正确位置</h2><p>左外边距为-100%，在浮动情况下，负外边距会导致div上移，而使用-100%可以确保它移动到最左侧。对右侧也设置该属性，值为-150px，注意负外边距一定等于该div的宽度才会刚好在最右侧</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.left &#123; </span><br><span class="line">    margin-left:-100%; </span><br><span class="line">&#125;</span><br><span class="line">.right &#123; </span><br><span class="line">     margin-left:-150px;   /* 自身宽度 */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5eawy4e3j21gx0a1t8q.jpg" alt></p>
-<p>注意这里和圣杯布局的区别，圣杯布局是将右侧的属性设定为右外边距，原因在于在圣杯布局中，一开始我们将是希望左右列占据的宽度作为container这个div的内边距去填充的，而在双飞翼布局中，并没有给container设置padding属性，也就是说到目前为止container的内容区宽度（不包括padding、margin和border）占据了整个浏览器视口。细心的同学可能发现了，中间文本去哪了呢？接下来就解决这个问题</p>
-<h2 id="第四步-让中间列正确显示"><a href="#第四步-让中间列正确显示" class="headerlink" title="第四步 让中间列正确显示"></a>第四步 让中间列正确显示</h2><p>经过上述的设置，中间列两侧的内容会被左右两列给挡住，为了解决这个问题，下面是淘宝的做法：</p>
-<p>1、DOM结构的改变：在.center下再次添加一个class=”wrap”的容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">　　&lt;div class=&quot;center&quot;&gt;</span><br><span class="line">　　    &lt;div class=&quot;wrap&quot;&gt;中间&lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">　　&lt;div class=&quot;left&quot;&gt;左&lt;/div&gt;</span><br><span class="line">　　&lt;div class=&quot;right&quot;&gt;右&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
-<p>2、利用CSS调整wrap的位置，就是把左右被挡住的部分，设置为wrap这个div的左、右外边距即可，最终的CSS如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">.container &#123; </span><br><span class="line">	width:100%; </span><br><span class="line">&#125;</span><br><span class="line">.container .center &#123; </span><br><span class="line">	float:left;</span><br><span class="line">	width:100%; </span><br><span class="line">&#125;</span><br><span class="line">.container .center .wrap &#123;</span><br><span class="line">    margin-left:200px;    /*大于等于左侧宽度*/</span><br><span class="line">    margin-right:150px;   /*大于等于右侧宽度*/</span><br><span class="line">&#125;</span><br><span class="line">.left &#123;</span><br><span class="line">	 float:left; </span><br><span class="line">	 width:200px; </span><br><span class="line">	 margin-left:-100%;</span><br><span class="line">&#125;</span><br><span class="line">.right &#123;</span><br><span class="line">	 float:left; </span><br><span class="line">	 width:150px; </span><br><span class="line">	 margin-left:-150px; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fy5ejwjtlej21gx09mmx6.jpg" alt></p>
-<p>到此已实现了基本功能，等高柱也可以按圣杯布局中同样的方法设定，至于样式上的调整此处不再赘述。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>事实上，圣杯布局其实和双飞翼布局是一回事。它们实现的都是三栏布局，两边的盒子宽度固定，中间盒子宽度自适应。它们实现的效果是一样的，差别在于其实现的过程与思想。实际应用中还应灵活使用，根据需要调整。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://alistapart.com/article/holygrail" target="_blank" rel="noopener">圣杯布局</a></p>
-<p><a href="http://www.cnblogs.com/langzs/archive/2013/01/27/taobaoshuangfeiyi.html" target="_blank" rel="noopener">双飞翼布局</a></p>
+          在学习CSS布局中，三栏布局中的圣杯布局和双飞翼布局应用很广泛，并不是说完成左右宽度固定中间宽度自适应这类布局的时候一定要用这两个布局的原理去实现，实现同一个布局的方法很多，我们应该根据需求去选择。
+不论是圣杯布局还是双飞翼布局其HTML的DOM结构都是按照中间—左侧—右侧的顺序，相应地也是按这个顺序进行加载，也就是我们常说的“重要的内容先加载”。
+圣杯布局STEP 1: CREATE THE FRAME先写好整体框架
+123&lt;div id=&quot;header&quot;&gt;&lt;/div&gt;&lt;div id=&quot;container&quot;&gt;&lt;/div&gt;&lt;div id=&quot;footer&quot;&gt;&lt;/div&gt;
+用希望左右列占据的宽度作为内边距填充容器
+1234#container &#123;  padding-left: 200px;   /* 左列宽度 */  padding-right: 150px;  /* 右列宽度 */&#125;
 
-          
+STEP 2: ADD THE COLUMNS加入具体的左中右三列，注意中间要放在前面
+1234567&lt;div id=&quot;header&q
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/13/圣杯布局与双飞翼布局小结/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -836,95 +769,20 @@
       
         
           
-            <h1 id="基于深度学习的在线恶意URL和DNS检测方案"><a href="#基于深度学习的在线恶意URL和DNS检测方案" class="headerlink" title="基于深度学习的在线恶意URL和DNS检测方案"></a>基于深度学习的在线恶意URL和DNS检测方案</h1><p><strong>原文作者</strong>：Jianguo Jiang, Jiuming Chen, K-K-Raymond Choo, Chao Liu, Kunying Liu and Min Yu</p>
-<p><strong>原文标题</strong>：A Deep Learning Based Online Malicious URL and DNS Detection Scheme</p>
-<p><strong>原文会议</strong>：Security and Privacy in Communication Networks(SecureComm 2017)</p>
-<p><strong>原文链接</strong>：<a href="https://link.springer.com/chapter/10.1007/978-3-319-78813-5_22" target="_blank" rel="noopener">https://link.springer.com/chapter/10.1007/978-3-319-78813-5_22</a></p>
-<p>随着越来越多的设备联网，利用人、过程和技术漏洞的网络威胁越来越普遍。比如去年的勒索软件WannaCry造成了巨大的损失，最常见的方式就是引诱人们点击恶意网站，也就是钓鱼。一个钓鱼网站可能会伪装成各种各样的广告，以达到攻击的目的。为了应对这种网络安全威胁，检测恶意URL非常有必要。目前对URL和DNS进行研究和检测的相关文献其实已经很多了，各种技术也应用得很成熟，足见在恶意网络攻击中这两类攻击媒介之常见。</p>
-<p>本文提出了一种基于字符级深度神经网络的在线检测方案。具体而言，该方案使用一些自然语言处理方法将URL和DNS字符串映射为矢量形式。再使用CNN（卷积神经网络）网络框架自动提取恶意特征并训练分类模型。使用真实的URL和DNS数据集进行实验，结果表明，所提出的方法优于几种最先进的基线方法，有较高的效率和可扩展性。</p>
-<h2 id="作者的工作："><a href="#作者的工作：" class="headerlink" title="作者的工作："></a>作者的工作：</h2><p>论文从如今网络空间安全的严峻形势出发，引入恶意URL在攻击行为中的表现形式，主要是钓鱼网站。比较前人所做的工作并总结研究成果，提出基于深度学习的在线恶意URL和DNS检测方案，主要分为三个模块，数据集的收集、深度学习分类模型的构建和威胁情报的收集更新。论文还对构建的分类检测模型进行真实数据验证和基于各项指标评估。最后讨论了所提出的方法可通用于短文本检测问题以及将在实际环境中部署所提出的方法。</p>
-<h2 id="一、引言与文献综述"><a href="#一、引言与文献综述" class="headerlink" title="一、引言与文献综述"></a>一、引言与文献综述</h2><p>针对传统的恶意检测URL的方法依赖于专家或机器学习提取的特征，作者提出三个明显的问题：</p>
-<ul>
-<li><p>(1) 网站数目及网络流量大幅增加，令有效及时检测恶意URL的工作变得复杂(例如，由于恶意URL需要大量新功能)。</p>
-</li>
-<li><p>(2) 不平衡数据集。与在线流量总量相比，恶意url的数量相对较少，这种不平衡(普通URL和恶意URL之间)可能导致不稳定的分类模型。</p>
-</li>
-<li><p>(3) 不断发展的攻击技术。攻击者通常使用广泛的技术来规避或避免现有的检测技术。</p>
-</li>
-</ul>
-<p>基于此，作者提出了基于字符级的并将深度神经网络、自语言处理与威胁情报三者相结合的检测方案。</p>
-<p>而现有的检测恶意URL的方法可分为以下几类：</p>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>基于黑名单</td>
-<td></td>
-</tr>
-<tr>
-<td>基于特征集</td>
-<td></td>
-</tr>
-<tr>
-<td>基于机器学习</td>
-<td></td>
-</tr>
-<tr>
-<td>基于URL</td>
-<td></td>
-</tr>
-<tr>
-<td>基于内容</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>本文只关注与在线检测相关的方法：基于URL的方法。<br>其中基于URL的方法是只利用URL自身的结构如长度、域名和URL中点(.)的数量，即紧紧围绕URL自身的属性进行。该方法效率高因此也被广泛应用，无论是手工提取特征集还是利用机器学习检测。</p>
-<p>下表展示了三种常用机器学习算法的特点与局限性</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fwbie64se8j20j107jq3z.jpg" alt></p>
-<p>而本文使用深度学习算法CNN去自动提取URL中隐藏的特征信息，具有强泛化能力。</p>
-<h2 id="二、提出方法"><a href="#二、提出方法" class="headerlink" title="二、提出方法"></a>二、提出方法</h2><p>整个模型的框架图：</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fwo0vlme37j20j30g7n1n.jpg" alt></p>
-<p>总体来看就是训练集导入深度学习分类模型，模型采用CNN框架，数据预处理和嵌入使用了自然语言处理方法，在生成模型后将收集到的URL和DNS的威胁情报加入更新，最终得到在线恶意URL检测模型。</p>
-<h3 id="1-训练数据集"><a href="#1-训练数据集" class="headerlink" title="1.训练数据集"></a>1.训练数据集</h3><h4 id="1-1数据特征"><a href="#1-1数据特征" class="headerlink" title="1.1数据特征"></a>1.1数据特征</h4><p>URL字符串包含了三种不同的语义段：域名、目录路径和文件名，还包含了数字、字母和”?””,”&amp;”等符号。对此如下形式的元祖用于定义一个URL字符串：p = (h, d, f)。h代表域名，d代表目录路径，f则代表了文件名。</p>
-<p>假设有恶意URL字符串p =（h，d，f）和正常URL字符串p’=（h’，d’，f’），如果存在文本片段形式的t’或其他形式的t”，t’与t”的一个特征满足p的定义但不符合p’，那么t’与t”可作为对URL进行分类的特征。</p>
-<p>恶意URL举例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://www.aaa.com/1.php?Include=http://www.bbb.com/hehe.php</span><br><span class="line">http://www.sqlinsertion.com/adminlogin.php/**/and/**/1=1.</span><br></pre></td></tr></table></figure>
-<h4 id="1-2模型评估"><a href="#1-2模型评估" class="headerlink" title="1.2模型评估"></a>1.2模型评估</h4><p>论文采用错误标记的URL数量和精确率评估准确性并采用运行时间评估效率。</p>
-<p>数据集中malicious URL是negative sample负样本，normal URL是positive sample正样本。</p>
-<p>Mislabeled number: FN + FP</p>
-<p>Accuracy rate: TN/FN + TN.</p>
-<h3 id="2-字符级深度学习框架"><a href="#2-字符级深度学习框架" class="headerlink" title="2.字符级深度学习框架"></a>2.字符级深度学习框架</h3><h4 id="2-1预处理"><a href="#2-1预处理" class="headerlink" title="2.1预处理"></a>2.1预处理</h4><p>由于HTTP和HTTPS协议的广泛使用，因此在检测中省略”http://“和”https://“是没有安全问题的。鉴于URL通常由数字，字母和一些符号组成。所以在文章提出的方法中，过滤了对分类结果影响很小的特殊符号，例如”_”和”#”等。经过预处理的数据集更简洁从而减少了之后步骤中的时间和资源需求。</p>
-<h4 id="2-2嵌入"><a href="#2-2嵌入" class="headerlink" title="2.2嵌入"></a>2.2嵌入</h4><p>论文需要将URL序列向量化后作为深度学习框架的输入，字符转换为词向量使用的是自然语言处理中的独热编码方法。独热编码，又称一位有效码，用序列化的数字（只有0和1）表达特征。主要思路是使用N位数字对N种情况进行编码，例如一串长度为L的字符串，每位字符有M种情况，则经过向量化后为L*M的矩阵，其中超过L长度的字符将被舍去，不在字符表（覆盖了全部M种情况）上的以及空字符将使用0替代。字符表是一个包含了26个字母、10位数字和14个特俗符号的集合。</p>
-<blockquote>
-<p>abcdefghijklmnopqrstuvwxyz</p>
-<p>0123456789</p>
-<p>-;!?:@#$^*% = &lt;&gt;</p>
-</blockquote>
-<p>考虑到实际情况，实验中选择L=256,M=50。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fwo0w8bzj3j20jl0gojv7.jpg" alt></p>
-<h4 id="2-3CNN框架与分类模型"><a href="#2-3CNN框架与分类模型" class="headerlink" title="2.3CNN框架与分类模型"></a>2.3CNN框架与分类模型</h4><p>这部分是将字符串嵌入矩阵后输入到深度学习框架的具体配置。CNN框架可自行了解，此处不再赘述。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fwo0xizlrjj20dk06aglz.jpg" alt></p>
-<h3 id="3-更新"><a href="#3-更新" class="headerlink" title="3.更新"></a>3.更新</h3><p>由于深度学习模型的训练过程通常耗时较长，难以对在线检测系统进行更新。文章使用当前更新的威胁情报(如URL和DNS黑名单)和增量学习模型尽量减小影响。</p>
-<h2 id="二、评估"><a href="#二、评估" class="headerlink" title="二、评估"></a>二、评估</h2><h3 id="1-实验环境与参照实验"><a href="#1-实验环境与参照实验" class="headerlink" title="1.实验环境与参照实验"></a>1.实验环境与参照实验</h3><p>论文选了两个参照实验：</p>
-<ul>
-<li>基于人工提取特征，特征包括了URL长度，“.”的数量和词语特征等，这些特征形成了一个非常大但稀疏的特征向量。</li>
-<li>为了比较基于字符级嵌入的深度学习和基于字级嵌入的深度学习之间的准确性实现的基于字级嵌入的深度学习框架。</li>
-</ul>
-<h3 id="2-数据"><a href="#2-数据" class="headerlink" title="2.数据"></a>2.数据</h3><p>对于恶意url，从Phish Tank和Virus Total获取。正常URL主要是从一些公开数据集中下载，比如谷歌和DMOZ<br>。训练数据集和测试数据集按照9:1随机分配，随机选择90%的标记数据作为训练数据集，其余10%作为测试数据集。</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fwo0y6b1ejj20cc05ht90.jpg" alt></p>
-<h3 id="3-结果"><a href="#3-结果" class="headerlink" title="3.结果"></a>3.结果</h3><p>X轴表示三种模型，Y轴表示测试集中每1000个URL里被标记错误的数量</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fwo0yl9ymqj20jw0bhwew.jpg" alt></p>
-<p>X轴表示三种模型，Y轴表示对两个测试集进行分类时间（单位秒），两个测试集分别包括了1000与2000个URL</p>
-<p><img src="http://ww1.sinaimg.cn/large/720b6cbagy1fwo0z3eyzzj20k109yt9o.jpg" alt></p>
-<h2 id="四、结论"><a href="#四、结论" class="headerlink" title="四、结论"></a>四、结论</h2><p>检测恶意URL和DNS的能力将越来越重要，在我们的互联网连接社会，特别是在物联网部署。<br>本文基于URL和DNS的文本模式，提出了一种基于字符级CNN的恶意URL和DNS检测方法。<br>我们使用真实的数据集来评估我们的方法，这表明我们的方法是准确和高效的。<br>此外，该方案是一种针对短文本检测问题的通用检测方案，在其他场合也有应用。<br>未来的研究包括在现实环境中部署所建议的方法，以便在必要时进行进一步的评估和微调。</p>
-<h2 id="五、讨论"><a href="#五、讨论" class="headerlink" title="五、讨论"></a>五、讨论</h2><p>文章主要提出了使用深度学习来检测恶意URL与DNS，作者表示也适用于短文本的检测，我认为在文献综述那块，对比了三个（贝叶斯，SVM和逻辑回归）常用的机器学习的方法，只是定性地阐述了其速度、准确率与局限等方面的表现，但是并没有实际做实验验证，不同的实验数据对同一个模型是有不同的实验结果的。不过对于选取的参照实验具有代表性，一个验证了手动提取和深度学习自动学习特征；一个对比了字符级与词级的词向量表示方法，算法没有对比这也是前面所说的文献综述部分只是提到为止。我以前有学习过用深度学习检测DGA，使用的是RNN中的LSTM，本文使用了CNN，并说LSTM表现不如CNN（耗时明显）。希望我之后可以在实践中验证。其次，不断将更新的数据加入到数据集也是值得学习的地方，因为黑客不断地更新技术，恶意样本集也在变化，为了适应这种网络攻击的变化，我们也应随之更新。</p>
-
-          
+          基于深度学习的在线恶意URL和DNS检测方案原文作者：Jianguo Jiang, Jiuming Chen, K-K-Raymond Choo, Chao Liu, Kunying Liu and Min Yu
+原文标题：A Deep Learning Based Online Malicious URL and DNS Detection Scheme
+原文会议：Security and Privacy in Communication Networks(SecureComm 2017)
+原文链接：https://link.springer.com/chapter/10.1007/978-3-319-78813-5_22
+随着越来越多的设备联网，利用人、过程和技术漏洞的网络威胁越来越普遍。比如去年的勒索软件WannaCry造成了巨大的损失，最常见的方式就是引诱人们点击恶意网站，也就是钓鱼。一个钓鱼网站可能会伪装成各种各样的广告，以达到攻击的目的。为了应对这种网络安全威胁，检测恶意URL非常有必要。目前对URL和DNS进行研究和检测的相关文献其实已经很多了，各种技术也应用得很成熟，足见在恶意网络攻击中这两类攻击媒介之常见。
+本文提出了一种基于字符级深度神经网络的在线检测方案。具体而
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/04/Malicious URL detection/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1080,13 +938,15 @@
       
         
           
-            <h2 id="本文只是几个例子没有详细研究各个方法"><a href="#本文只是几个例子没有详细研究各个方法" class="headerlink" title="本文只是几个例子没有详细研究各个方法"></a>本文只是几个例子没有详细研究各个方法</h2><h4 id="在写前端的时候经常会遇到对数据格式进行处理的情况，其中qs-parse-、qs-stringify-、JSON-parse-、JSON-stringify-也是常用的几种方法，对以上使用方法进行总结记下来以便之后查看方便。"><a href="#在写前端的时候经常会遇到对数据格式进行处理的情况，其中qs-parse-、qs-stringify-、JSON-parse-、JSON-stringify-也是常用的几种方法，对以上使用方法进行总结记下来以便之后查看方便。" class="headerlink" title="在写前端的时候经常会遇到对数据格式进行处理的情况，其中qs.parse()、qs.stringify()、JSON.parse()、JSON.stringify()也是常用的几种方法，对以上使用方法进行总结记下来以便之后查看方便。"></a>在写前端的时候经常会遇到对数据格式进行处理的情况，其中qs.parse()、qs.stringify()、JSON.parse()、JSON.stringify()也是常用的几种方法，对以上使用方法进行总结记下来以便之后查看方便。</h4><h4 id="一、JSON-parse-用于从一个字符串中解析出json对象"><a href="#一、JSON-parse-用于从一个字符串中解析出json对象" class="headerlink" title="一、JSON.parse()用于从一个字符串中解析出json对象"></a>一、JSON.parse()用于从一个字符串中解析出json对象</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let str = &apos;[&#123;&quot;userId&quot;: &quot;1&quot;,&quot;id&quot;: &quot;1&quot;,&quot;title&quot;: &quot;delectus aut autem&quot;,&quot;completed&quot;: &quot;false&quot;&#125;,&#123;&quot;userId&quot;: &quot;1&quot;,&quot;id&quot;: &quot;2&quot;,&quot;title&quot;: &quot;quis ut nam facilis et officia qui&quot;,&quot;completed&quot;: &quot;false&quot;&#125;,&#123;&quot;userId&quot;: &quot;1&quot;,&quot;id&quot;: &quot;3&quot;,&quot;title&quot;: &quot;fugiat veniam minus&quot;,&quot;completed&quot;: &quot;false&quot;&#125;,&#123;&quot;userId&quot;: &quot;1&quot;,&quot;id&quot;: &quot;4&quot;,&quot;title&quot;: &quot;et porro tempora&quot;,&quot;completed&quot;: &quot;true&quot;&#125;]&apos;;</span><br><span class="line"></span><br><span class="line">let arr = JSON.parse(str); //str必须满足引号使用规范，即：双引号和单引号相互嵌套</span><br><span class="line"></span><br><span class="line">arr:[&#123;userId: &quot;1&quot;, id: &quot;1&quot;, title: &quot;delectus aut autem&quot;, completed: &quot;false&quot;&#125;,</span><br><span class="line">    &#123;userId: &quot;1&quot;, id: &quot;2&quot;, title: &quot;quis ut nam facilis et officia qui&quot;, completed: &quot;false&quot;&#125;,</span><br><span class="line">    &#123;userId: &quot;1&quot;, id: &quot;3&quot;, title: &quot;fugiat veniam minus&quot;, completed: &quot;false&quot;&#125;,</span><br><span class="line">    &#123;userId: &quot;1&quot;, id: &quot;4&quot;, title: &quot;et porro tempora&quot;, completed: &quot;true&quot;&#125;];</span><br></pre></td></tr></table></figure>
-<h4 id="二、JSON-stringify-用于从一个json对象解析出字符串"><a href="#二、JSON-stringify-用于从一个json对象解析出字符串" class="headerlink" title="二、JSON.stringify()用于从一个json对象解析出字符串"></a>二、JSON.stringify()用于从一个json对象解析出字符串</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let arr = [&#123;userId: &quot;1&quot;, id: &quot;1&quot;, title: &quot;delectus aut autem&quot;, completed: &quot;false&quot;&#125;,</span><br><span class="line">    &#123;userId: &quot;1&quot;, id: &quot;2&quot;, title: &quot;quis ut nam facilis et officia qui&quot;, completed: &quot;false&quot;&#125;,</span><br><span class="line">    &#123;userId: &quot;1&quot;, id: &quot;3&quot;, title: &quot;fugiat veniam minus&quot;, completed: &quot;false&quot;&#125;,</span><br><span class="line">    &#123;userId: &quot;1&quot;, id: &quot;4&quot;, title: &quot;et porro tempora&quot;, completed: &quot;true&quot;&#125;];</span><br><span class="line"></span><br><span class="line">let str = JSON.stringify(arr);//全是双引号</span><br><span class="line"></span><br><span class="line">str:&apos;[&#123;&quot;userId&quot;:&quot;1&quot;,&quot;id&quot;:&quot;1&quot;,&quot;title&quot;:&quot;delectus aut autem&quot;,&quot;completed&quot;:&quot;false&quot;&#125;,&#123;&quot;userId&quot;:&quot;1&quot;,&quot;id&quot;:&quot;2&quot;,&quot;title&quot;:&quot;quis ut nam facilis et officia qui&quot;,&quot;completed&quot;:&quot;false&quot;&#125;,&#123;&quot;userId&quot;:&quot;1&quot;,&quot;id&quot;:&quot;3&quot;,&quot;title&quot;:&quot;fugiat veniam minus&quot;,&quot;completed&quot;:&quot;false&quot;&#125;,&#123;&quot;userId&quot;:&quot;1&quot;,&quot;id&quot;:&quot;4&quot;,&quot;title&quot;:&quot;et porro tempora&quot;,&quot;completed&quot;:&quot;true&quot;&#125;]&apos;;</span><br></pre></td></tr></table></figure>
-<h4 id="三、qs-parse-将URL解析成对象的形式"><a href="#三、qs-parse-将URL解析成对象的形式" class="headerlink" title="三、qs.parse()将URL解析成对象的形式"></a>三、qs.parse()将URL解析成对象的形式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let url = &apos;method=query_sql_dataset_data&amp;projectId=85&amp;appToken=7d22e38e-5717-11e7-907b-a6006ad3dba0&apos;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">let obj = qs.parse(url);//</span><br><span class="line">obj:&#123;</span><br><span class="line">      method: &quot;query_sql_dataset_data&quot;, </span><br><span class="line">      projectId: &quot;85&quot;, </span><br><span class="line">      appToken: &quot;7d22e38e-5717-11e7-907b-a6006ad3dba0&quot;&#125;;</span><br></pre></td></tr></table></figure>
-<h4 id="四、qs-stringify-将对象解析成URL的形式"><a href="#四、qs-stringify-将对象解析成URL的形式" class="headerlink" title="四、qs.stringify()将对象解析成URL的形式"></a>四、qs.stringify()将对象解析成URL的形式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let obj = &#123;</span><br><span class="line">            type: &quot;POST&quot;,</span><br><span class="line">            dataType: &quot;json&quot;,</span><br><span class="line">            url: &quot;/users/login&quot;&#125;;</span><br><span class="line"></span><br><span class="line">let url = qs.stringify( obj)</span><br><span class="line"></span><br><span class="line">url:type=POST&amp;dataType=json&amp;url=%2Fusers%2Flogin</span><br></pre></td></tr></table></figure>
-<p>qs.stringify(opts.data)<br>要注意在使用post请求时如果不使用qs.stringify()后台是拿不到数据的。</p>
-
-          
+          本文只是几个例子没有详细研究各个方法在写前端的时候经常会遇到对数据格式进行处理的情况，其中qs.parse()、qs.stringify()、JSON.parse()、JSON.stringify()也是常用的几种方法，对以上使用方法进行总结记下来以便之后查看方便。一、JSON.parse()用于从一个字符串中解析出json对象12345678let str = &apos;[&#123;&quot;userId&quot;: &quot;1&quot;,&quot;id&quot;: &quot;1&quot;,&quot;title&quot;: &quot;delectus aut autem&quot;,&quot;completed&quot;: &quot;false&quot;&#125;,&#123;&quot;userId&quot;: &quot;1&quot;,&quot;id&quot;: &quot;2&quot;,&quot;title&quot;: &quot;quis ut nam facilis et officia qui&quot;,&quot;completed&quot;: &quot;false&quot;&#125;,&#123;&quo
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/28/qs 和 json 区别/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1242,103 +1102,26 @@
       
         
           
-            <h1 id="CSS伪元素整理小结"><a href="#CSS伪元素整理小结" class="headerlink" title="CSS伪元素整理小结"></a>CSS伪元素整理小结</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>CSS中有一个特性允许我们添加额外元素而不影响文档本身，即实际上文档中没有生成这些元素，但在表面上可见，这就是伪元素。伪元素是对元素中的特定内容进行操作。实际上，设计伪元素的目的就是选取某些内容第一个字母（一行）、前面（后面）或是占位符等普通的选择器无法完成的工作。它控制的内容实际上和元素是相同的，但是它本身只是基于元素的抽象，并不存在于文档中，所以称作伪元素。伪元素在CSS1中就已经存在，CSS2和3中也有所增加，目前[CSS-PSEUDO-4] (Level 4)中也有部分处于试验阶段，表格中已用“*”标记。</p>
-<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>起初伪元素的语法是使用一个冒号“:”，但是随着web的发展，在CSS3中伪元素使用两个冒号“::”，以便将它与伪类区分开（如:hover，:active等）。然而，使用一个冒号还是两个冒号，浏览器都能识别它们。但是IE8只支持一个冒号的格式，建议使用两个冒号::与伪类区分。</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><ul>
-<li>基本用法</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selector::pseudo-element &#123;property:value;&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>结合CSS类</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selector.class::pseudo-element &#123;property:value;&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>结合CSS伪类</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selector.class:pseudo-class::pseudo-element &#123;property:value;&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>结合多个伪元素</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">selector::pseudo-element-1 </span><br><span class="line">selector::pseudo-element-2</span><br></pre></td></tr></table></figure>
-<ul>
-<li>多重伪元素与伪元素嵌套目前正逐步进行。</li>
-</ul>
-<h2 id="整理"><a href="#整理" class="headerlink" title="整理"></a>整理</h2><table>
-<thead>
-<tr>
-<th>伪元素</th>
-<th>功能</th>
-<th>分类</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>::first-letter</td>
-<td>向文本的第一个字母添加特殊样式</td>
-<td>Typographic</td>
-</tr>
-<tr>
-<td>::first-line</td>
-<td>向文本的首行添加特殊样式</td>
-<td>Typographic</td>
-</tr>
-<tr>
-<td>::before</td>
-<td>在元素之前添加内容</td>
-<td>Tree-Abiding</td>
-</tr>
-<tr>
-<td>::after</td>
-<td>在元素之后添加内容</td>
-<td>Tree-Abiding</td>
-</tr>
-<tr>
-<td>::placeholder*</td>
-<td>选择一个表单元素的占位文本，它允许开发者和设计师自定义占位文本的样式。</td>
-<td>Tree-Abiding</td>
-</tr>
-<tr>
-<td>::marker*</td>
-<td>选择列表的前置标记，一般包含着重符号或数字，任何设置 display: list-item属性的元素或伪元素都能适用</td>
-<td>Tree-Abiding</td>
-</tr>
-<tr>
-<td>::selection（::inactive-selection）</td>
-<td>设置对象被选择时的样式， 应用于文档中被用户高亮的部分（比如使用鼠标或其他选择设备选中的部分）</td>
-<td>Highlight</td>
-</tr>
-<tr>
-<td>::grammar-error*</td>
-<td>应用于浏览器标识为语法错误的文本段</td>
-<td>Highlight</td>
-</tr>
-<tr>
-<td>::spelling-erro*</td>
-<td>表示浏览器标记为不正确拼写的文本段</td>
-<td>Highlight</td>
-</tr>
-<tr>
-<td>::cue</td>
-<td>匹配所选元素中的WebVTT提示，可用于在VTT轨道的媒体中使用字幕和其他线索</td>
-<td>\</td>
-</tr>
-<tr>
-<td>::backdrop</td>
-<td>在任何处于全屏模式的元素下的即刻渲染的盒子</td>
-<td>\</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>尽管有这么多个伪元素（相比伪类已经不多了），但是常用的是前四个，并且后面部分浏览器支持度很差。最最常用的是 “::before” 和 “::after”。</p>
-<p>“::first-line” 与 “::first-letter”只能用于块级元素。</p>
-<p>当宿主元素没有内容时”::before” 与 “::after”仍会正常工作，为inline内联元素，可通过display：block设置为block块元素。</p>
-<p>content属性是伪元素必需的，若伪元素没有内容，需赋值为空格content:’’。</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>CSS 伪元素用于将特殊的效果添加到某些选择器。伪元素十分好用，可以在不影响实际HTML结构的情况下使用，将会为设计某些样式省下不少时间。</p>
-<p>参考：</p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference" target="_blank" rel="noopener">CSS reference</a></p>
-<p><a href="http://www.w3school.com.cn/css/css_pseudo_elements.asp" target="_blank" rel="noopener">W3school</a></p>
+          CSS伪元素整理小结介绍CSS中有一个特性允许我们添加额外元素而不影响文档本身，即实际上文档中没有生成这些元素，但在表面上可见，这就是伪元素。伪元素是对元素中的特定内容进行操作。实际上，设计伪元素的目的就是选取某些内容第一个字母（一行）、前面（后面）或是占位符等普通的选择器无法完成的工作。它控制的内容实际上和元素是相同的，但是它本身只是基于元素的抽象，并不存在于文档中，所以称作伪元素。伪元素在CSS1中就已经存在，CSS2和3中也有所增加，目前[CSS-PSEUDO-4] (Level 4)中也有部分处于试验阶段，表格中已用“*”标记。
+语法起初伪元素的语法是使用一个冒号“:”，但是随着web的发展，在CSS3中伪元素使用两个冒号“::”，以便将它与伪类区分开（如:hover，:active等）。然而，使用一个冒号还是两个冒号，浏览器都能识别它们。但是IE8只支持一个冒号的格式，建议使用两个冒号::与伪类区分。
+使用
+基本用法
 
-          
+1selector::pseudo-element &#123;property:value;&#125;
+
+结合CSS类
+
+1selector.class::pseudo-element &#123;property:value;&#125;
+
+结合CSS
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/01/CSS伪元素总结/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1583,6 +1366,18 @@
                 
                   <li class="links-of-blogroll-item">
                     <a href="https://17307.github.io/" title="LittleHourY" target="_blank">LittleHourY</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://myndtt.github.io/" title="myndtt" target="_blank">myndtt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://miss-me.github.io/" title="Miss Me" target="_blank">Miss Me</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://syean.cn/" title="Syean" target="_blank">Syean</a>
                   </li>
                 
               </ul>
