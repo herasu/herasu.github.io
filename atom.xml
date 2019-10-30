@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-10-09T11:45:45.357Z</updated>
+  <updated>2019-10-30T06:42:21.643Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,65 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一种快速、不区分格式的检测恶意Web内容的深度学习方法</title>
+    <link href="http://yoursite.com/2019/10/30/%E4%B8%80%E7%A7%8D%E5%BF%AB%E9%80%9F%E3%80%81%E4%B8%8D%E5%8C%BA%E5%88%86%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%A3%80%E6%B5%8B%E6%81%B6%E6%84%8FWeb%E5%86%85%E5%AE%B9%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"/>
+    <id>http://yoursite.com/2019/10/30/一种快速、不区分格式的检测恶意Web内容的深度学习方法/</id>
+    <published>2019-10-30T06:46:19.743Z</published>
+    <updated>2019-10-30T06:42:21.643Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一种快速、不区分格式的检测恶意Web内容的深度学习方法"><a href="#一种快速、不区分格式的检测恶意Web内容的深度学习方法" class="headerlink" title="一种快速、不区分格式的检测恶意Web内容的深度学习方法"></a>一种快速、不区分格式的检测恶意Web内容的深度学习方法</h1><p><strong>作者</strong>：fish@DAS</p><p><strong>原文作者</strong>：Joshua Saxe(<a href="https://www.sophos.com/en-us/labs/researchers/joshua-saxe.aspx" target="_blank" rel="noopener">主页</a>), Richard Harang, Cody Wild, Hillary Sanders</p><p><strong>原文标题</strong>：A Deep Learning Approach to Fast, Format-Agnostic Detection of Malicious Web Content.</p><p><strong>原文会议</strong>：2018 IEEE Security and Privacy Workshops (SPW)</p><p><strong>原文链接</strong>：<a href="https://arxiv.org/abs/1804.05020" target="_blank" rel="noopener">https://arxiv.org/abs/1804.05020</a></p><h2 id="一、论文主要内容："><a href="#一、论文主要内容：" class="headerlink" title="一、论文主要内容："></a>一、论文主要内容：</h2><p>本文主要内容是使用深度学习检恶意web内容，提出的方法是直接使用简单正则表达式从静态HTML文件中提取的与语言无关的token流来表示HTML，再将该HTML文档的特征表示输入到神经网络中。该方法具有快速、不区分格式等特点，适合部署于终端、防火墙与web代理中。</p><h2 id="二、作者的工作："><a href="#二、作者的工作：" class="headerlink" title="二、作者的工作："></a>二、作者的工作：</h2><h3 id="2-1问题提出"><a href="#2-1问题提出" class="headerlink" title="2.1问题提出"></a>2.1问题提出</h3><p>恶意web内容是网络攻击的一大方式，利用恶意web内容的攻击在当今的网络上非常普遍。<br>作者认为检测和阻止此类恶意内容存在以下挑战：</p><ul><li>首先，检测方法必须在用户终端和防火墙中的硬件上快速运行，以免影响用户的浏览体验。</li><li>其次，方法必须能够抵御恶意Web内容中的语法和语义变化，从而避免诸如Javascript模糊处理和文本随机化之类的对抗性规避技术。</li><li>最后，检测方法必须能够处理局部恶意内容的情况：嵌入正常的Web内容中的小段恶意代码。 因为当今的许多网络攻击都是在良性网页中通过恶意的广告网络或评论来实现的。</li></ul><p>为了解决这些挑战，本文提出了一种用于检测恶意Web内容的深度学习方法。</p><h3 id="2-2模型设计"><a href="#2-2模型设计" class="headerlink" title="2.2模型设计"></a>2.2模型设计</h3><h4 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h4><p>首先对于局部恶意片段，作者认为要确定给定的文档是恶意的，需要模型在多个层次规模上检查该文档。这是因为恶意Javascript代码段的大小范围很小，但是HTML文档的长度差异很大，所以恶意内容部分在整个HTML文档比例中是可变的。</p><p>作者还认为不应该显式分析HTML文档（HTML，Javascript，CSS和原始数据的集合），愿意是实现起来复杂，需要大量的计算开销，并且会在检测器自身内部打开攻击页面，这有可能潜在地被攻击者利用。事实上web页面中可执行部分是有JavaScript控制的，因此也不应该在HTML文档中进行Javascript的仿真，静态分析或符号执行。</p><p>到此，思路清晰。作者仅仅对HTML文档计算词袋样式的token，并且不只使用表示整个文档token流，还使用多个不同层次规模大小的表示文档的token流。</p><h4 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h4><p>本文方法包括一个特征提取器和一个神经网络模型，特征提取器即从HTML文档中解析出一系列token，神经网络模型通过使用多个层次规模的聚合特征的共享权重来进行分类。其中神经网络模型部分包括两个逻辑组件：</p><ul><li>inspector，它以不同层次规模大小的文档按比例应用共享权重，并将有关文档的信息聚合为1024长度的向量。 </li><li>master network，该网络使用inspector的输出为输入，进行最终分类决策。</li></ul><h5 id="Feature-extraction模块："><a href="#Feature-extraction模块：" class="headerlink" title="Feature extraction模块："></a>Feature extraction模块：</h5><p>原始数据为HTML文档，使用正则（[^\x00-\x7F]+|\w+）对文档进行分割，这个正则表达式的意思是匹配除了ASCII值从0-127的字符外的字符或者匹配包括下划线的任何单词字符（等价于’[A-Za-z0-9_]’）二者之一。简单说就是去掉了大部分标点符号。</p><p>我们将token流分成16个等长的连续块，其中每个块的长度定义为token数，如果文档中的令牌数不能被16整除，则最后一个块中的token数会比其他块少。</p><p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/TokenizeChunk.png" alt></p><p>最后使用散列方法，将每个token块散列到1024个分区，16个块则表示为16X1024的向量，该向量表示一个HTML文档的词袋样式的token。</p><p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/TokenizeLengthHash.png" alt></p><h5 id="Inspector模块："><a href="#Inspector模块：" class="headerlink" title="Inspector模块："></a>Inspector模块：</h5><p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/inspector.png" alt></p><p>将16个token块分成8份、4份、2份、1份四个不同大小。一共就是31个token块。Inspector具有两个全连接层，每层具有1024个ReLU单元，使用归一化来防止梯度消失，dropout设置为0.2。经过上述过程，31个块每个都输出为1024维的向量，过最大池化得到一个输出。</p><h5 id="Master模块："><a href="#Master模块：" class="headerlink" title="Master模块："></a>Master模块：</h5><p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/master.png" alt></p><p>最后一层是26个Sigmoid函数，其中1个用于判断该Web是否为恶意，其余25个用于判断具体类别。</p><h2 id="三、实验"><a href="#三、实验" class="headerlink" title="三、实验"></a>三、实验</h2><h3 id="3-1实验数据"><a href="#3-1实验数据" class="headerlink" title="3.1实验数据"></a>3.1实验数据</h3><p>作者使用从威胁情报站点VirusTotal收集的数据。VirusTotal每天接收数万个新的HTML文件，使用来自数十家安全供应商的60个Web威胁扫描程序扫描它们。 作者所在的Sophos公司订阅了VirusTotal的付费威胁情报服务，会收到提交给VirusTotal的每个HTML文件及其相应的扫描结果。本文中使用的实验数据集是在2017年前10个月从VirusTotal Feed中收集的。</p><p>训练/测试划分是根据文件在VirusTotal上首次报告的时间计算的。此过程确保</p><ul><li>训练和测试集是不同的</li><li>训练和测试过程近似于实际的部署方案</li></ul><p>数据的标签是从扫描器的综合结果得出，标记规则为：</p><ul><li>Benign: receiving 0 detections from security vendors</li><li>Malicious: receiving 3 or more detections</li><li>Indeterminate: received 1 or 2 detections, and did not use them</li></ul><p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/dataset.png" alt></p><p>这种标记方法带来的弊端是只会简单地记住安全厂商产品已经能检测出恶意web内容的知识，而不是学习新的检测功能，以检测厂商社区可能会错过的恶意软件。 </p><p>实验将9月1日之前的数据用于训练，9月1日之后的数据用于测试。这样切分数据集有助于减轻供应商社区可能会错过的恶意Web内容的能力的问题。这是因为使用的测试集是训练集中未见过的文件。为了证明提出的方法的有效性，作者还手动检查了样本，标签为良性，但是将其分配为恶意的可能性很高，即误报率较高，他们发现这些假阳性文件中的大多数都明显是恶意或垃圾内容。</p><h3 id="3-2实验步骤"><a href="#3-2实验步骤" class="headerlink" title="3.2实验步骤"></a>3.2实验步骤</h3><p>作者进行了五个对比实验，其中三个测试了本文的方法相对于其他模型的有效性，剩下两个探索了模型的内部工作原理。</p><h4 id="三个测试模型有效性的对比实验："><a href="#三个测试模型有效性的对比实验：" class="headerlink" title="三个测试模型有效性的对比实验："></a>三个测试模型有效性的对比实验：</h4><ul><li>LR-BoT：Elastic Net regularized logistic regression on bag of token features.</li><li>FF-BoT：A feed-forward architecture using the 16284-length feature hashed bag of tokens feature representation used above. </li><li>XGBoost-BoT：A gradient boosted decision tree (XG-Boost) model using the same feature input as FF-BoT.</li></ul><p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/ROC1.png" alt></p><h4 id="两个验证模型内部结构对实验结果的影响的对比实验："><a href="#两个验证模型内部结构对实验结果的影响的对比实验：" class="headerlink" title="两个验证模型内部结构对实验结果的影响的对比实验："></a>两个验证模型内部结构对实验结果的影响的对比实验：</h4><ul><li>FlatSequential：删除了平均池化步骤，即在输入到Inspector模型的31个聚合表示中，该模型只使用了最初的16个连续块。该对比模型检验了使用不同层次规模的文档对检测结果的准确率有所提升。</li><li>FlattenedFF：使用相同的特征表示，但没有Inspector模块，即没有应用共享权重，而是简单地将16x1024的token向量的转换为单个16384长的向量，并将其输入到前馈神经网络中，使用单独权重。该对比模型检验了共享权重对检测结果的准确率有所提升。</li></ul><p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/ROC2.png" alt></p><h3 id="3-3实验结果"><a href="#3-3实验结果" class="headerlink" title="3.3实验结果"></a>3.3实验结果</h3><p>作者提出的方法误报率为0.1%，ROC曲线为97.5%，对小规模的网页能以每秒超过100条的速度进行分类，能够检测到安全社区遗漏的未知恶意Web内容。进一步地，对不同恶意家族也能进行区分，对XSS注入、浏览器漏洞利用和iFrame操纵攻击检测结果突出，但对钓鱼网站的表现最差。<br><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/family.png" alt></p><h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>文章没有使用常规的词袋模型用于提取数据特征，而是使用hash对原始HTML文档进行处理，并考虑了不同层次规模大小的划分，以往的研究多是直接使用一个整体，没有考虑局部的一些特征，这也许会错过有效信息导致检测结果的偏差。这篇文章的对数据的处理这块想法新颖，不过模型训练部分属于常规操作，实验结果表现良好。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;一种快速、不区分格式的检测恶意Web内容的深度学习方法&quot;&gt;&lt;a href=&quot;#一种快速、不区分格式的检测恶意Web内容的深度学习方法&quot; class=&quot;headerlink&quot; title=&quot;一种快速、不区分格式的检测恶意Web内容的深度学习方法&quot;&gt;&lt;/a&gt;一种快速、
+      
+    
+    </summary>
+    
+      <category term="论文笔记" scheme="http://yoursite.com/categories/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="web security" scheme="http://yoursite.com/tags/web-security/"/>
+    
+      <category term="deep learning" scheme="http://yoursite.com/tags/deep-learning/"/>
+    
+      <category term="IEEE SPW 2018" scheme="http://yoursite.com/tags/IEEE-SPW-2018/"/>
+    
+      <category term="Web Content Detection" scheme="http://yoursite.com/tags/Web-Content-Detection/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ubuntu16.04 python2安装第三方库murmur</title>
+    <link href="http://yoursite.com/2019/10/22/ubuntu16.04%20python2%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93murmur/"/>
+    <id>http://yoursite.com/2019/10/22/ubuntu16.04 python2安装第三方库murmur/</id>
+    <published>2019-10-22T10:53:24.734Z</published>
+    <updated>2019-10-22T10:53:11.013Z</updated>
+    
+    <content type="html"><![CDATA[<p>复现代码时遇到的问题（实在不懂都9102了还用2009最后更新的库，而且还是py2!!!）</p><p>首先 <a href="https://pypi.org/project/Murmur/" target="_blank" rel="noopener">Murmur 0.1.3</a> 是用C++写的，</p><p>直接pip install murmur或者把源码下到本地用<figure class="highlight"><figcaption><span>setup.py build```也是一样的。</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">缺少C++环境，[可以在此下载](https://www.microsoft.com/en-us/download/confirmation.aspx?id=44266)</span><br></pre></td></tr></table></figure></p><p>error: Microsoft Visual C++ 9.0 is required…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">装好环境之后再执行，缺少zlib.h库</span><br></pre></td></tr></table></figure></p><p>murmur/include\unzip.h(53) : fatal error C1083: Cannot open include file: ‘zlib.h’: No such file or directory<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">所以还是要下源码= =!</span><br><span class="line">于是把zlib.h继续下到本地放进源码正确的位置中，后续还是出现了很多问题。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">![](https://raw.githubusercontent.com/herasu/blog_pic/master/error.png)</span><br><span class="line"></span><br><span class="line">最终解决办法：</span><br><span class="line">1. 在murmur/include/crypt.h开头添加两句</span><br></pre></td></tr></table></figure></p><p>#ifndef __MURMUR_CRYPT_H</p><p>#define __MURMUR_CRYPT_H<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">![](https://raw.githubusercontent.com/herasu/blog_pic/master/addtwolines.png)</span><br><span class="line"></span><br><span class="line">最后添加endif</span><br><span class="line"></span><br><span class="line">![](https://raw.githubusercontent.com/herasu/blog_pic/master/endif.png)</span><br><span class="line"></span><br><span class="line">2. 再下载一个zlib.h</span><br></pre></td></tr></table></figure></p><p>apt install zlib1g-dev<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">![](https://raw.githubusercontent.com/herasu/blog_pic/master/apt.png)</span><br><span class="line"></span><br><span class="line">3. 就可以安装了！</span><br></pre></td></tr></table></figure></p><p>python setup.py build<br>python setup.py install<br><code>`</code></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;复现代码时遇到的问题（实在不懂都9102了还用2009最后更新的库，而且还是py2!!!）&lt;/p&gt;
+&lt;p&gt;首先 &lt;a href=&quot;https://pypi.org/project/Murmur/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Murmur 
+      
+    
+    </summary>
+    
+      <category term="日常踩坑" scheme="http://yoursite.com/categories/%E6%97%A5%E5%B8%B8%E8%B8%A9%E5%9D%91/"/>
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="无法安装库" scheme="http://yoursite.com/tags/%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85%E5%BA%93/"/>
+    
+  </entry>
   
   <entry>
     <title>win10控制面板-系统和安全-系统 加载页面失败</title>

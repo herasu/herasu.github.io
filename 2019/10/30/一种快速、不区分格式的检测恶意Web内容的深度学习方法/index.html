@@ -1,0 +1,1089 @@
+﻿<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: "in"
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一种快速、不区分格式的检测恶意Web内容的深度学习方法作者：fish@DAS 原文作者：Joshua Saxe(主页), Richard Harang, Cody Wild, Hillary Sanders 原文标题：A Deep Learning Approach to Fast, Format-Agnostic Detection of Malicious Web Content. 原文会议：">
+<meta name="keywords" content="web security,deep learning,IEEE SPW 2018,Web Content Detection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一种快速、不区分格式的检测恶意Web内容的深度学习方法">
+<meta property="og:url" content="http://yoursite.com/2019/10/30/一种快速、不区分格式的检测恶意Web内容的深度学习方法/index.html">
+<meta property="og:site_name" content="Fish">
+<meta property="og:description" content="一种快速、不区分格式的检测恶意Web内容的深度学习方法作者：fish@DAS 原文作者：Joshua Saxe(主页), Richard Harang, Cody Wild, Hillary Sanders 原文标题：A Deep Learning Approach to Fast, Format-Agnostic Detection of Malicious Web Content. 原文会议：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/herasu/blog_pic/master/TokenizeChunk.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/herasu/blog_pic/master/TokenizeLengthHash.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/herasu/blog_pic/master/inspector.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/herasu/blog_pic/master/master.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/herasu/blog_pic/master/dataset.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/herasu/blog_pic/master/ROC1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/herasu/blog_pic/master/ROC2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/herasu/blog_pic/master/family.png">
+<meta property="og:updated_time" content="2019-10-30T06:42:21.643Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一种快速、不区分格式的检测恶意Web内容的深度学习方法">
+<meta name="twitter:description" content="一种快速、不区分格式的检测恶意Web内容的深度学习方法作者：fish@DAS 原文作者：Joshua Saxe(主页), Richard Harang, Cody Wild, Hillary Sanders 原文标题：A Deep Learning Approach to Fast, Format-Agnostic Detection of Malicious Web Content. 原文会议：">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/herasu/blog_pic/master/TokenizeChunk.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Fish" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/30/一种快速、不区分格式的检测恶意Web内容的深度学习方法/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>一种快速、不区分格式的检测恶意Web内容的深度学习方法 | Fish</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5b5272a6278c6164e292cdb8320bce50";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/herasu" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Fish</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Cheer</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/30/一种快速、不区分格式的检测恶意Web内容的深度学习方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="herasu">
+      <meta itemprop="description" content="Be kind">
+      <meta itemprop="image" content="/images/night.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fish">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一种快速、不区分格式的检测恶意Web内容的深度学习方法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-30 14:46:19 / 修改时间：14:42:21" itemprop="dateCreated datePublished" datetime="2019-10-30T14:46:19+08:00">2019-10-30</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/论文笔记/" itemprop="url" rel="index"><span itemprop="name">论文笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一种快速、不区分格式的检测恶意Web内容的深度学习方法"><a href="#一种快速、不区分格式的检测恶意Web内容的深度学习方法" class="headerlink" title="一种快速、不区分格式的检测恶意Web内容的深度学习方法"></a>一种快速、不区分格式的检测恶意Web内容的深度学习方法</h1><p><strong>作者</strong>：fish@DAS</p>
+<p><strong>原文作者</strong>：Joshua Saxe(<a href="https://www.sophos.com/en-us/labs/researchers/joshua-saxe.aspx" target="_blank" rel="noopener">主页</a>), Richard Harang, Cody Wild, Hillary Sanders</p>
+<p><strong>原文标题</strong>：A Deep Learning Approach to Fast, Format-Agnostic Detection of Malicious Web Content.</p>
+<p><strong>原文会议</strong>：2018 IEEE Security and Privacy Workshops (SPW)</p>
+<p><strong>原文链接</strong>：<a href="https://arxiv.org/abs/1804.05020" target="_blank" rel="noopener">https://arxiv.org/abs/1804.05020</a></p>
+<h2 id="一、论文主要内容："><a href="#一、论文主要内容：" class="headerlink" title="一、论文主要内容："></a>一、论文主要内容：</h2><p>本文主要内容是使用深度学习检恶意web内容，提出的方法是直接使用简单正则表达式从静态HTML文件中提取的与语言无关的token流来表示HTML，再将该HTML文档的特征表示输入到神经网络中。该方法具有快速、不区分格式等特点，适合部署于终端、防火墙与web代理中。</p>
+<h2 id="二、作者的工作："><a href="#二、作者的工作：" class="headerlink" title="二、作者的工作："></a>二、作者的工作：</h2><h3 id="2-1问题提出"><a href="#2-1问题提出" class="headerlink" title="2.1问题提出"></a>2.1问题提出</h3><p>恶意web内容是网络攻击的一大方式，利用恶意web内容的攻击在当今的网络上非常普遍。<br>作者认为检测和阻止此类恶意内容存在以下挑战：</p>
+<ul>
+<li>首先，检测方法必须在用户终端和防火墙中的硬件上快速运行，以免影响用户的浏览体验。</li>
+<li>其次，方法必须能够抵御恶意Web内容中的语法和语义变化，从而避免诸如Javascript模糊处理和文本随机化之类的对抗性规避技术。</li>
+<li>最后，检测方法必须能够处理局部恶意内容的情况：嵌入正常的Web内容中的小段恶意代码。 因为当今的许多网络攻击都是在良性网页中通过恶意的广告网络或评论来实现的。</li>
+</ul>
+<p>为了解决这些挑战，本文提出了一种用于检测恶意Web内容的深度学习方法。</p>
+<h3 id="2-2模型设计"><a href="#2-2模型设计" class="headerlink" title="2.2模型设计"></a>2.2模型设计</h3><h4 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h4><p>首先对于局部恶意片段，作者认为要确定给定的文档是恶意的，需要模型在多个层次规模上检查该文档。这是因为恶意Javascript代码段的大小范围很小，但是HTML文档的长度差异很大，所以恶意内容部分在整个HTML文档比例中是可变的。</p>
+<p>作者还认为不应该显式分析HTML文档（HTML，Javascript，CSS和原始数据的集合），愿意是实现起来复杂，需要大量的计算开销，并且会在检测器自身内部打开攻击页面，这有可能潜在地被攻击者利用。事实上web页面中可执行部分是有JavaScript控制的，因此也不应该在HTML文档中进行Javascript的仿真，静态分析或符号执行。</p>
+<p>到此，思路清晰。作者仅仅对HTML文档计算词袋样式的token，并且不只使用表示整个文档token流，还使用多个不同层次规模大小的表示文档的token流。</p>
+<h4 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h4><p>本文方法包括一个特征提取器和一个神经网络模型，特征提取器即从HTML文档中解析出一系列token，神经网络模型通过使用多个层次规模的聚合特征的共享权重来进行分类。其中神经网络模型部分包括两个逻辑组件：</p>
+<ul>
+<li>inspector，它以不同层次规模大小的文档按比例应用共享权重，并将有关文档的信息聚合为1024长度的向量。 </li>
+<li>master network，该网络使用inspector的输出为输入，进行最终分类决策。</li>
+</ul>
+<h5 id="Feature-extraction模块："><a href="#Feature-extraction模块：" class="headerlink" title="Feature extraction模块："></a>Feature extraction模块：</h5><p>原始数据为HTML文档，使用正则（[^\x00-\x7F]+|\w+）对文档进行分割，这个正则表达式的意思是匹配除了ASCII值从0-127的字符外的字符或者匹配包括下划线的任何单词字符（等价于’[A-Za-z0-9_]’）二者之一。简单说就是去掉了大部分标点符号。</p>
+<p>我们将token流分成16个等长的连续块，其中每个块的长度定义为token数，如果文档中的令牌数不能被16整除，则最后一个块中的token数会比其他块少。</p>
+<p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/TokenizeChunk.png" alt></p>
+<p>最后使用散列方法，将每个token块散列到1024个分区，16个块则表示为16X1024的向量，该向量表示一个HTML文档的词袋样式的token。</p>
+<p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/TokenizeLengthHash.png" alt></p>
+<h5 id="Inspector模块："><a href="#Inspector模块：" class="headerlink" title="Inspector模块："></a>Inspector模块：</h5><p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/inspector.png" alt></p>
+<p>将16个token块分成8份、4份、2份、1份四个不同大小。一共就是31个token块。Inspector具有两个全连接层，每层具有1024个ReLU单元，使用归一化来防止梯度消失，dropout设置为0.2。经过上述过程，31个块每个都输出为1024维的向量，过最大池化得到一个输出。</p>
+<h5 id="Master模块："><a href="#Master模块：" class="headerlink" title="Master模块："></a>Master模块：</h5><p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/master.png" alt></p>
+<p>最后一层是26个Sigmoid函数，其中1个用于判断该Web是否为恶意，其余25个用于判断具体类别。</p>
+<h2 id="三、实验"><a href="#三、实验" class="headerlink" title="三、实验"></a>三、实验</h2><h3 id="3-1实验数据"><a href="#3-1实验数据" class="headerlink" title="3.1实验数据"></a>3.1实验数据</h3><p>作者使用从威胁情报站点VirusTotal收集的数据。VirusTotal每天接收数万个新的HTML文件，使用来自数十家安全供应商的60个Web威胁扫描程序扫描它们。 作者所在的Sophos公司订阅了VirusTotal的付费威胁情报服务，会收到提交给VirusTotal的每个HTML文件及其相应的扫描结果。本文中使用的实验数据集是在2017年前10个月从VirusTotal Feed中收集的。</p>
+<p>训练/测试划分是根据文件在VirusTotal上首次报告的时间计算的。此过程确保</p>
+<ul>
+<li>训练和测试集是不同的</li>
+<li>训练和测试过程近似于实际的部署方案</li>
+</ul>
+<p>数据的标签是从扫描器的综合结果得出，标记规则为：</p>
+<ul>
+<li>Benign: receiving 0 detections from security vendors</li>
+<li>Malicious: receiving 3 or more detections</li>
+<li>Indeterminate: received 1 or 2 detections, and did not use them</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/dataset.png" alt></p>
+<p>这种标记方法带来的弊端是只会简单地记住安全厂商产品已经能检测出恶意web内容的知识，而不是学习新的检测功能，以检测厂商社区可能会错过的恶意软件。 </p>
+<p>实验将9月1日之前的数据用于训练，9月1日之后的数据用于测试。这样切分数据集有助于减轻供应商社区可能会错过的恶意Web内容的能力的问题。这是因为使用的测试集是训练集中未见过的文件。为了证明提出的方法的有效性，作者还手动检查了样本，标签为良性，但是将其分配为恶意的可能性很高，即误报率较高，他们发现这些假阳性文件中的大多数都明显是恶意或垃圾内容。</p>
+<h3 id="3-2实验步骤"><a href="#3-2实验步骤" class="headerlink" title="3.2实验步骤"></a>3.2实验步骤</h3><p>作者进行了五个对比实验，其中三个测试了本文的方法相对于其他模型的有效性，剩下两个探索了模型的内部工作原理。</p>
+<h4 id="三个测试模型有效性的对比实验："><a href="#三个测试模型有效性的对比实验：" class="headerlink" title="三个测试模型有效性的对比实验："></a>三个测试模型有效性的对比实验：</h4><ul>
+<li>LR-BoT：Elastic Net regularized logistic regression on bag of token features.</li>
+<li>FF-BoT：A feed-forward architecture using the 16284-length feature hashed bag of tokens feature representation used above. </li>
+<li>XGBoost-BoT：A gradient boosted decision tree (XG-Boost) model using the same feature input as FF-BoT.</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/ROC1.png" alt></p>
+<h4 id="两个验证模型内部结构对实验结果的影响的对比实验："><a href="#两个验证模型内部结构对实验结果的影响的对比实验：" class="headerlink" title="两个验证模型内部结构对实验结果的影响的对比实验："></a>两个验证模型内部结构对实验结果的影响的对比实验：</h4><ul>
+<li>FlatSequential：删除了平均池化步骤，即在输入到Inspector模型的31个聚合表示中，该模型只使用了最初的16个连续块。该对比模型检验了使用不同层次规模的文档对检测结果的准确率有所提升。</li>
+<li>FlattenedFF：使用相同的特征表示，但没有Inspector模块，即没有应用共享权重，而是简单地将16x1024的token向量的转换为单个16384长的向量，并将其输入到前馈神经网络中，使用单独权重。该对比模型检验了共享权重对检测结果的准确率有所提升。</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/ROC2.png" alt></p>
+<h3 id="3-3实验结果"><a href="#3-3实验结果" class="headerlink" title="3.3实验结果"></a>3.3实验结果</h3><p>作者提出的方法误报率为0.1%，ROC曲线为97.5%，对小规模的网页能以每秒超过100条的速度进行分类，能够检测到安全社区遗漏的未知恶意Web内容。进一步地，对不同恶意家族也能进行区分，对XSS注入、浏览器漏洞利用和iFrame操纵攻击检测结果突出，但对钓鱼网站的表现最差。<br><img src="https://raw.githubusercontent.com/herasu/blog_pic/master/family.png" alt></p>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>文章没有使用常规的词袋模型用于提取数据特征，而是使用hash对原始HTML文档进行处理，并考虑了不同层次规模大小的划分，以往的研究多是直接使用一个整体，没有考虑局部的一些特征，这也许会错过有效信息导致检测结果的偏差。这篇文章的对数据的处理这块想法新颖，不过模型训练部分属于常规操作，实验结果表现良好。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>herasu</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2019/10/30/一种快速、不区分格式的检测恶意Web内容的深度学习方法/" title="一种快速、不区分格式的检测恶意Web内容的深度学习方法">http://yoursite.com/2019/10/30/一种快速、不区分格式的检测恶意Web内容的深度学习方法/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web-security/" rel="tag"><i class="fa fa-tag"></i> web security</a>
+          
+            <a href="/tags/deep-learning/" rel="tag"><i class="fa fa-tag"></i> deep learning</a>
+          
+            <a href="/tags/IEEE-SPW-2018/" rel="tag"><i class="fa fa-tag"></i> IEEE SPW 2018</a>
+          
+            <a href="/tags/Web-Content-Detection/" rel="tag"><i class="fa fa-tag"></i> Web Content Detection</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/22/ubuntu16.04 python2安装第三方库murmur/" rel="next" title="ubuntu16.04 python2安装第三方库murmur">
+                <i class="fa fa-chevron-left"></i> ubuntu16.04 python2安装第三方库murmur
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjUzNC8yMzA0NA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/night.jpg" alt="herasu">
+            
+              <p class="site-author-name" itemprop="name">herasu</p>
+              <p class="site-description motion-element" itemprop="description">Be kind</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">40</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/herasu" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:yusucq@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.whiterabbitxyj.com/" title="WhiteRabbit" target="_blank">WhiteRabbit</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://17307.github.io/" title="LittleHourY" target="_blank">LittleHourY</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://myndtt.github.io/" title="myndtt" target="_blank">myndtt</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://miss-me.github.io/" title="Miss Me" target="_blank">Miss Me</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://syean.cn/" title="Syean" target="_blank">Syean</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一种快速、不区分格式的检测恶意Web内容的深度学习方法"><span class="nav-number">1.</span> <span class="nav-text">一种快速、不区分格式的检测恶意Web内容的深度学习方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、论文主要内容："><span class="nav-number">1.1.</span> <span class="nav-text">一、论文主要内容：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、作者的工作："><span class="nav-number">1.2.</span> <span class="nav-text">二、作者的工作：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1问题提出"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1问题提出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2模型设计"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2模型设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设计思想"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">设计思想</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#具体实现"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Feature-extraction模块："><span class="nav-number">1.2.2.2.1.</span> <span class="nav-text">Feature extraction模块：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Inspector模块："><span class="nav-number">1.2.2.2.2.</span> <span class="nav-text">Inspector模块：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Master模块："><span class="nav-number">1.2.2.2.3.</span> <span class="nav-text">Master模块：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、实验"><span class="nav-number">1.3.</span> <span class="nav-text">三、实验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1实验数据"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1实验数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2实验步骤"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2实验步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#三个测试模型有效性的对比实验："><span class="nav-number">1.3.2.1.</span> <span class="nav-text">三个测试模型有效性的对比实验：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两个验证模型内部结构对实验结果的影响的对比实验："><span class="nav-number">1.3.2.2.</span> <span class="nav-text">两个验证模型内部结构对实验结果的影响的对比实验：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3实验结果"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、总结"><span class="nav-number">1.4.</span> <span class="nav-text">四、总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    
+    <i class="fa fa-snowflake-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">herasu</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.3.0</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <!-- 页面点击小红心 --> 
+<script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

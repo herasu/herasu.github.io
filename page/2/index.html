@@ -321,6 +321,380 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/16/踩坑小结2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="herasu">
+      <meta itemprop="description" content="Be kind">
+      <meta itemprop="image" content="/images/night.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fish">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/16/踩坑小结2/" itemprop="url">
+                  踩坑小结2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-16 11:56:24 / 修改时间：11:55:27" itemprop="dateCreated datePublished" datetime="2019-04-16T11:56:24+08:00">2019-04-16</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          1. 路由1.1 跳转页面开发中遇到需要在函数中实现页面跳转时，一般会使用this.$router.push。
+
+使用  创建 a 标签来定义导航链接时，我们点击  时，这个方法会在内部调用，所以说，点击  等同于调用 router.push(…)。
+
+那么若想要跳转时新开一个页面，而不是在原有页面中跳转，这时可以通过添加target=_blank属性：
+1&lt;router-link target=&quot;_blank&quot; :to=&quot;home&quot;&gt;新页面打开home页&lt;/router-link&gt;
+编程式导航需要使用this.$router.resolve：
+12let routeData = this.$router.resolve(&#123; path: &apos;/home&apos;, query: &#123; id:id &#125;&#125;);window.open(routeData.href, &apos;_blank&apos;);
+1.2 路由传参既然涉及到传参，也简单说明一下。首先要清楚
+
+this.$router：VueRouter 实例，有一系列对应的方法：router.push、 router.r
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/16/踩坑小结2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/03/去除图片背景的在线网站/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="herasu">
+      <meta itemprop="description" content="Be kind">
+      <meta itemprop="image" content="/images/night.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fish">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/03/去除图片背景的在线网站/" itemprop="url">
+                  去除图片背景的在线网站
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-03 19:57:53 / 修改时间：20:00:19" itemprop="dateCreated datePublished" datetime="2019-04-03T19:57:53+08:00">2019-04-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/宝藏网站/" itemprop="url" rel="index"><span itemprop="name">宝藏网站</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          最近有需求对证件照的背景颜色进行替换，发现了这么一个宝藏网站removebg。
+简介号称全自动（不必手动选择背景/前景层来分隔它们），无需一次点击，只需五秒就可得到！
+
+使用复杂的AI技术来检测前景层并将它们与背景分开。为了改善结果，有几个额外的算法，例如改善细节和防止颜色污染。
+
+使用官方支持两种加载图片方式: 本地文件上传 or 图片URL地址，操作非常简单，除了去掉原背景外还可以添加新的背景，包括纯色或图片，图片可以选择自带提供的也可以使用自己上传的。
+个人使用的话，免费版就完全够了，无需注册，注册后还有每个月50次API调用与一张HD图像免费下载资格。
+图片支持最大文件大小为8 MB的JPG和PNG图像。每张图片必须包含至少一个可检测的人。
+可以上传任何图像分辨率并选择以下输出尺寸之一，其中只有0.25百万像素是免费的。
+
+
+
+画质
+像素
+
+
+
+
+常规
+高达0.25百万像素 - 例如625×400（free）
+
+
+中等
+高达1.5百万像素 - 例如1500×1000
+
+
+高清
+高达4百万像素 - 例如2500×1600 
+
+
+4K
+高达1000万像素 - 例如4000×2500
+
+
+
+APIAPI目前仅支持：人物照片；支持八种环境的API使用。
+API是一个简单的HTTP接口
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/03/去除图片背景的在线网站/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/28/踩坑小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -819,350 +1193,11 @@ STEP 2: ADD THE COLUMNS加入具体的左中右三列，注意中间要放在前
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/28/qs 和 json 区别/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="herasu">
-      <meta itemprop="description" content="Be kind">
-      <meta itemprop="image" content="/images/night.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fish">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/28/qs 和 json 区别/" itemprop="url">
-                  qs.parse()、qs.stringify()、JSON.parse()、JSON.stringify()示例
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-09-28 21:10:06 / 修改时间：21:18:38" itemprop="dateCreated datePublished" datetime="2018-09-28T21:10:06+08:00">2018-09-28</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          本文只是几个例子没有详细研究各个方法在写前端的时候经常会遇到对数据格式进行处理的情况，其中qs.parse()、qs.stringify()、JSON.parse()、JSON.stringify()也是常用的几种方法，对以上使用方法进行总结记下来以便之后查看方便。一、JSON.parse()用于从一个字符串中解析出json对象12345678let str = &apos;[&#123;&quot;userId&quot;: &quot;1&quot;,&quot;id&quot;: &quot;1&quot;,&quot;title&quot;: &quot;delectus aut autem&quot;,&quot;completed&quot;: &quot;false&quot;&#125;,&#123;&quot;userId&quot;: &quot;1&quot;,&quot;id&quot;: &quot;2&quot;,&quot;title&quot;: &quot;quis ut nam facilis et officia qui&quot;,&quot;completed&quot;: &quot;false&quot;&#125;,&#123;&quo
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/09/28/qs 和 json 区别/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/CSS伪元素总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="herasu">
-      <meta itemprop="description" content="Be kind">
-      <meta itemprop="image" content="/images/night.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fish">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/01/CSS伪元素总结/" itemprop="url">
-                  CSS伪元素整理小结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-08-01 16:59:19 / 修改时间：16:59:01" itemprop="dateCreated datePublished" datetime="2018-08-01T16:59:19+08:00">2018-08-01</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          CSS伪元素整理小结介绍CSS中有一个特性允许我们添加额外元素而不影响文档本身，即实际上文档中没有生成这些元素，但在表面上可见，这就是伪元素。伪元素是对元素中的特定内容进行操作。实际上，设计伪元素的目的就是选取某些内容第一个字母（一行）、前面（后面）或是占位符等普通的选择器无法完成的工作。它控制的内容实际上和元素是相同的，但是它本身只是基于元素的抽象，并不存在于文档中，所以称作伪元素。伪元素在CSS1中就已经存在，CSS2和3中也有所增加，目前[CSS-PSEUDO-4] (Level 4)中也有部分处于试验阶段，表格中已用“*”标记。
-语法起初伪元素的语法是使用一个冒号“:”，但是随着web的发展，在CSS3中伪元素使用两个冒号“::”，以便将它与伪类区分开（如:hover，:active等）。然而，使用一个冒号还是两个冒号，浏览器都能识别它们。但是IE8只支持一个冒号的格式，建议使用两个冒号::与伪类区分。
-使用
-基本用法
-
-1selector::pseudo-element &#123;property:value;&#125;
-
-结合CSS类
-
-1selector.class::pseudo-element &#123;property:value;&#125;
-
-结合CSS
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/08/01/CSS伪元素总结/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1207,7 +1242,7 @@ STEP 2: ADD THE COLUMNS加入具体的左中右三列，注意中间要放在前
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-count">17</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1315,7 +1350,15 @@ STEP 2: ADD THE COLUMNS加入具体的左中右三列，注意中间要放在前
                     
                       
                     
-                    <span class="site-state-item-count">36</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">40</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
