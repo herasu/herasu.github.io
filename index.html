@@ -321,6 +321,176 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://herasu.github.io/2019/11/21/经典面试题-作用域 闭包 promise实现for循环不同值输出/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="herasu">
+      <meta itemprop="description" content="Be kind">
+      <meta itemprop="image" content="/images/night.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Fish">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/21/经典面试题-作用域 闭包 promise实现for循环不同值输出/" itemprop="url">
+                  经典前端面试题-作用域 闭包 promise实现for循环不同值输出
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-21 19:53:08 / 修改时间：19:52:50" itemprop="dateCreated datePublished" datetime="2019-11-21T19:53:08+08:00">2019-11-21</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          记录最近学习到的一道经典面试题
+1.要求：输出55555原理：JS是单线程，程序在主线程中执行，当遇到setTimeout，将其放入等待队列，等for循环执行完毕后，再将等待队列中的console.log(i)执行
+12345for (var i=0;i&lt;5;i++) &#123;    setTimeout(function()&#123;        console.log(i)    &#125;,1000)&#125;
+2.要求：输出501234利用自执行/立即执行方式，闭包
+原理：i传给了立即执行函数，立即执行函数的参数j是从i传过来的，而立即执行中的函数setTimeout里面的函数参数j是父函数立即执行函数的参数，这样形成一个闭包。
+12345678for (var i=0;i&lt;5;i++) &#123;    (function(j)&#123;        setTimeout(function()&#123;            console.log(j)        &#125;,1000)    &#125;)(i)&#125;console.log(i) //这一句是主线程中执行的 所以i是5，先执行
+3.要求：输出501234函数方式
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/11/21/经典面试题-作用域 闭包 promise实现for循环不同值输出/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://herasu.github.io/2019/10/30/一种快速、不区分格式的检测恶意Web内容的深度学习方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1013,174 +1183,6 @@ murmur/include\unzip.h(53) : fatal error C1083: Cannot open include file: ‘zli
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://herasu.github.io/2019/06/12/踩坑小结3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="herasu">
-      <meta itemprop="description" content="Be kind">
-      <meta itemprop="image" content="/images/night.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Fish">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/06/12/踩坑小结3/" itemprop="url">
-                  踩坑小结3
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-06-12 21:53:23 / 修改时间：21:53:11" itemprop="dateCreated datePublished" datetime="2019-06-12T21:53:23+08:00">2019-06-12</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          1.路由传参undefined？上一节已经区分过两种传参方式，仍然在踩坑路上越走越远
-12let routeData = this.$router.resolve(&#123; name: &apos;xxx&apos;, params: &#123; id: id &#125;&#125;)window.open(routeData.href, &apos;_blank&apos;) //新开页面无法获取到id
-1this.$router.push(&#123;name:&apos;xxx&apos;,params:&#123;id:id&#125;&#125;) //直接替换当前路由可获取到
- 问了师姐，她说是要用watch监听路由变化，监听出来就是第一种的from.path为根路由，并非是我跳转前的真实当前路由；第二种直接跳转的一切正常。暂时没想到既要新开页面，也希望用name和params传参的办法，先留个坑，之后再填。不过用path和query传参虽然会显得URL比较丑，但能确保用户刷新后还有数据。
-2.v-bind绑定变量与字符串组合123456789//xx为变量第一种:title=&quot;`字符串$&#123;xx&#125;`&quot;&lt;div :uid
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/06/12/踩坑小结3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1230,7 +1232,7 @@ murmur/include\unzip.h(53) : fatal error C1083: Cannot open include file: ‘zli
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1346,7 +1348,17 @@ murmur/include\unzip.h(53) : fatal error C1083: Cannot open include file: ‘zli
                     
                       
                     
-                    <span class="site-state-item-count">40</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
